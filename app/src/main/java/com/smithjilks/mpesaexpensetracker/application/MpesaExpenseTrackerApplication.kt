@@ -1,4 +1,4 @@
-package com.smithjilks.mpesaexpensetracker
+package com.smithjilks.mpesaexpensetracker.application
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

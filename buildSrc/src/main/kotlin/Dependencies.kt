@@ -49,6 +49,7 @@ object Libs {
             const val material3WindowSize = "androidx.compose.material3:material3-window-size-class:1.1.0"
             const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:1.0.0"
 
+            const val navigation = "androidx.navigation:navigation-compose:2.5.3"
             const val kotlinxCoroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
             const val kotlinxCoroutinesPlayServices = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
 

@@ -49,6 +49,7 @@ dependencies {
     implementation(Libs.AndroidX.lifecycleRuntimeKtx)
     implementation(Libs.AndroidX.Compose.material3)
     implementation(Libs.AndroidX.Compose.material3WindowSize)
+    implementation(Libs.AndroidX.Compose.navigation)
 
     implementation(Libs.AndroidX.roomKtx)
     annotationProcessor(Libs.AndroidX.roomCompiler)

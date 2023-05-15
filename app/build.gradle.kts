@@ -64,6 +64,8 @@ dependencies {
     implementation(Libs.AndroidX.Compose.uiGraphics)
     implementation(Libs.AndroidX.Compose.uiToolingPreview)
     implementation(Libs.AndroidX.Compose.material3)
+    implementation(Libs.AndroidX.Compose.navigation)
+
 
     implementation(Libs.hilt)
     kapt(Libs.hiltCompiler)
