@@ -7,6 +7,8 @@ object Libs {
     object BuildPlugins {
         const val androidGradlePlugin = "com.android.tools.build:gradle:7.2.1"
         const val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.0"
+        const val hiltGradlePlugin = "com.google.dagger:hilt-android-gradle-plugin:2.45"
+        const val hiltAndroidPlugin = "com.google.dagger.hilt.android"
         const val androidApplication = "com.android.application"
         const val androidLibrary = "com.android.library"
         const val jetbrainsKotlinAndroid = "org.jetbrains.kotlin.android"
@@ -16,7 +18,7 @@ object Libs {
     }
 
     object Kotlin {
-        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0"
+
     }
 
 
@@ -33,6 +35,9 @@ object Libs {
         const val ktxCore = "androidx.core:core-ktx:1.10.0"
         const val lifecycleRuntimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
         const val viewmodelLifecycle = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+        const val roomRuntime = "androidx.room:room-runtime:2.5.1"
+        const val roomKtx = "androidx.room:room-ktx:2.5.1"
+        const val roomCompiler = "androidx.room:room-compiler:2.5.1"
 
         object Compose {
             const val bom = "androidx.compose:compose-bom:2022.10.00"
@@ -40,14 +45,11 @@ object Libs {
             const val ui = "androidx.compose.ui:ui"
             const val uiGraphics = "androidx.compose.ui:ui-graphics"
             const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview"
-            const val material3 = "androidx.compose.material3:material3"
+            const val material3 = "androidx.compose.material3:material3:1.1.0"
+            const val material3WindowSize = "androidx.compose.material3:material3-window-size-class:1.1.0"
             const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:1.0.0"
-            const val roomRuntime = "androidx.room:room-runtime:2.5.1"
-            const val roomKtx = "androidx.room:room-ktx:2.5.1"
-            const val roomCompiler = "androidx.room:room-compiler:2.5.1"
 
             const val kotlinxCoroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-            const val kotlinxCoroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
             const val kotlinxCoroutinesPlayServices = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
 
         }

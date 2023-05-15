@@ -1,6 +1,10 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
-    id("com.android.application")
+    id(Libs.BuildPlugins.androidApplication)
     kotlin("android")
+    kotlin("kapt")
+    id(Libs.BuildPlugins.hiltAndroidPlugin)
 }
 
 android {
@@ -30,17 +34,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
     packagingOptions {
         resources {
@@ -61,6 +65,12 @@ dependencies {
     implementation(Libs.AndroidX.Compose.uiToolingPreview)
     implementation(Libs.AndroidX.Compose.material3)
 
+    implementation(Libs.hilt)
+    kapt(Libs.hiltCompiler)
+    kapt(Libs.hiltAndroidCompiler)
+
+    implementation(project(":core"))
+
     testImplementation(Libs.TestLibraries.junit4)
     androidTestImplementation(Libs.TestLibraries.junitExt)
     androidTestImplementation(Libs.TestLibraries.espressoCore)
@@ -68,4 +78,9 @@ dependencies {
     androidTestImplementation(Libs.TestLibraries.junit4ComposeUI)
     debugImplementation(Libs.TestLibraries.composeUiTooling)
     debugImplementation(Libs.TestLibraries.composeUiTestManifest)
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

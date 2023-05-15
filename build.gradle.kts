@@ -6,7 +6,6 @@ buildscript {
     }
 
     dependencies {
-        //classpath("com.google.dagger:hilt-android-gradle-plugin:2.45")
         classpath(Libs.BuildPlugins.androidGradlePlugin)
         classpath(Libs.BuildPlugins.kotlinGradlePlugin)
     }
@@ -15,7 +14,8 @@ buildscript {
 plugins {
     id(Libs.BuildPlugins.androidApplication) version "8.0.0" apply false
     id(Libs.BuildPlugins.androidLibrary) version "8.0.0" apply false
-    id(Libs.BuildPlugins.jetbrainsKotlinAndroid) version "1.8.0" apply false
+    id(Libs.BuildPlugins.jetbrainsKotlinAndroid) version "1.8.21" apply false
+    id(Libs.BuildPlugins.hiltAndroidPlugin) version "2.44" apply false
 }
 
 tasks.register("clean").configure {

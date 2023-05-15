@@ -1,6 +1,8 @@
 plugins {
-    id("com.android.application")
+    id(Libs.BuildPlugins.androidLibrary)
     kotlin("android")
+    kotlin("kapt")
+    id(Libs.BuildPlugins.hiltAndroidPlugin)
 }
 
 android {
@@ -19,14 +21,19 @@ android {
         proguardFiles("consumer-rules.pro")
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
 
     packagingOptions {
@@ -41,9 +48,24 @@ dependencies {
     implementation(Libs.AndroidX.ktxCore)
     implementation(Libs.AndroidX.lifecycleRuntimeKtx)
     implementation(Libs.AndroidX.Compose.material3)
+    implementation(Libs.AndroidX.Compose.material3WindowSize)
+
+    implementation(Libs.AndroidX.roomKtx)
+    annotationProcessor(Libs.AndroidX.roomCompiler)
+    implementation(Libs.AndroidX.roomRuntime)
+
+    implementation(Libs.hilt)
+    kapt(Libs.hiltCompiler)
+    kapt(Libs.hiltAndroidCompiler)
+
 
     testImplementation(Libs.TestLibraries.junit4)
     androidTestImplementation(Libs.TestLibraries.junitExt)
     androidTestImplementation(Libs.TestLibraries.espressoCore)
 
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
