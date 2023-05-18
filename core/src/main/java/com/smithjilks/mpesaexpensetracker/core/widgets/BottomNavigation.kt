@@ -41,7 +41,7 @@ fun BottomNavigation(navController: NavController) {
             icon = ImageVector.vectorResource(R.drawable.dashboard_icon)
         ),
         BottomNavigationItem(
-            name = "Statistics",
+            name = "Create",
             route = MpesaExpenseTrackerScreens.RecordDetailsScreen.name,
             icon = ImageVector.vectorResource(R.drawable.create_record_icon)
         ),

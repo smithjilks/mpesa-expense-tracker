@@ -63,6 +63,8 @@ dependencies {
     implementation(Libs.AndroidX.Compose.ui)
     implementation(Libs.AndroidX.Compose.uiGraphics)
     implementation(Libs.AndroidX.Compose.uiToolingPreview)
+    debugImplementation(Libs.AndroidX.Compose.uiTooling)
+
     implementation(Libs.AndroidX.Compose.material3)
     implementation(Libs.AndroidX.Compose.navigation)
 

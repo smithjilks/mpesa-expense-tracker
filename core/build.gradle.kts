@@ -52,6 +52,8 @@ dependencies {
     implementation(Libs.AndroidX.Compose.navigation)
     implementation(Libs.AndroidX.Compose.uiGraphics)
     implementation(Libs.AndroidX.Compose.uiToolingPreview)
+    debugImplementation(Libs.AndroidX.Compose.uiTooling)
+
 
     implementation(Libs.AndroidX.roomKtx)
     kapt(Libs.AndroidX.roomCompiler)

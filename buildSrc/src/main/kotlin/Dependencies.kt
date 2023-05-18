@@ -46,6 +46,7 @@ object Libs {
             const val ui = "androidx.compose.ui:ui"
             const val uiGraphics = "androidx.compose.ui:ui-graphics"
             const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview:1.4.2"
+            const val uiTooling = "androidx.compose.ui:ui-tooling:1.4.3"
             const val material3 = "androidx.compose.material3:material3:1.1.0"
             const val material3WindowSize = "androidx.compose.material3:material3-window-size-class:1.1.0"
             const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:1.0.0"

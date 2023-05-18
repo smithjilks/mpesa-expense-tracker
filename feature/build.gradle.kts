@@ -64,7 +64,7 @@ dependencies {
     implementation(Libs.AndroidX.Compose.uiGraphics)
     implementation(Libs.AndroidX.Compose.uiToolingPreview)
 
-    debugImplementation("androidx.compose.ui:ui-tooling:1.4.3")
+    debugImplementation(Libs.AndroidX.Compose.uiTooling)
 
     implementation(Libs.AndroidX.roomKtx)
     annotationProcessor(Libs.AndroidX.roomCompiler)
