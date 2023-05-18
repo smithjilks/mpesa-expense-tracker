@@ -1,5 +1,6 @@
 package com.smithjilks.mpesaexpensetracker.core.data
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,6 +11,7 @@ import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.model.User
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface AppDao {
 
     // User queries
@@ -24,10 +26,10 @@ interface AppDao {
 
 
     // Categories Queries
-    @Query("SELECT * FROM records_table")
+    @Query("SELECT * FROM categories_table")
     fun getAllCategories(): Flow<List<Category>>
 
-    @Query("SELECT * FROM records_table where recordId =:id")
+    @Query("SELECT * FROM categories_table where id =:id")
     suspend fun getCategoryById(id: Int): Category
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -36,7 +38,7 @@ interface AppDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCategory(category: Category)
 
-    @Query("DELETE FROM records_table")
+    @Query("DELETE FROM categories_table")
     suspend fun deleteAllCategories()
 
     @Delete

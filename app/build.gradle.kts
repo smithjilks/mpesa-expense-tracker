@@ -72,6 +72,7 @@ dependencies {
     kapt(Libs.hiltAndroidCompiler)
 
     implementation(project(":core"))
+    implementation(project(":feature"))
 
     testImplementation(Libs.TestLibraries.junit4)
     androidTestImplementation(Libs.TestLibraries.junitExt)

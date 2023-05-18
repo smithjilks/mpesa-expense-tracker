@@ -30,6 +30,7 @@ object Libs {
     const val hiltCompiler ="com.google.dagger:hilt-compiler:2.44"
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:2.44"
 
+
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.4.1"
         const val ktxCore = "androidx.core:core-ktx:1.10.0"
@@ -44,10 +45,11 @@ object Libs {
             const val activity = "androidx.activity:activity-compose:1.7.1"
             const val ui = "androidx.compose.ui:ui"
             const val uiGraphics = "androidx.compose.ui:ui-graphics"
-            const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview"
+            const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview:1.4.2"
             const val material3 = "androidx.compose.material3:material3:1.1.0"
             const val material3WindowSize = "androidx.compose.material3:material3-window-size-class:1.1.0"
             const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:1.0.0"
+
 
             const val navigation = "androidx.navigation:navigation-compose:2.5.3"
             const val kotlinxCoroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"

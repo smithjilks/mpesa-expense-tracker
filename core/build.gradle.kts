@@ -18,7 +18,7 @@ android {
             useSupportLibrary = true
         }
 
-        proguardFiles("consumer-rules.pro")
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     compileOptions {
@@ -50,9 +50,11 @@ dependencies {
     implementation(Libs.AndroidX.Compose.material3)
     implementation(Libs.AndroidX.Compose.material3WindowSize)
     implementation(Libs.AndroidX.Compose.navigation)
+    implementation(Libs.AndroidX.Compose.uiGraphics)
+    implementation(Libs.AndroidX.Compose.uiToolingPreview)
 
     implementation(Libs.AndroidX.roomKtx)
-    annotationProcessor(Libs.AndroidX.roomCompiler)
+    kapt(Libs.AndroidX.roomCompiler)
     implementation(Libs.AndroidX.roomRuntime)
 
     implementation(Libs.hilt)

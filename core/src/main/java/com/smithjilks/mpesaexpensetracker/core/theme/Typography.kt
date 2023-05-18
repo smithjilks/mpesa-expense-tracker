@@ -26,5 +26,15 @@ val Typography = Typography(
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
+    ),
+    bodySmall =TextStyle(
+        fontFamily = Domine,
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = Montserrat,
+    ),
+
+    headlineMedium = TextStyle(
+        fontFamily = Montserrat,
     )
 )

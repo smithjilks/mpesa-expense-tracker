@@ -1,4 +1,4 @@
-package com.smithjilks.mpesaexpensetracker.navigation
+package com.smithjilks.mpesaexpensetracker.core.constants
 
 enum class MpesaExpenseTrackerScreens {
     DashboardScreen,
