@@ -19,6 +19,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.smithjilks.mpesaexpensetracker.core.R
 import com.smithjilks.mpesaexpensetracker.core.constants.MpesaExpenseTrackerScreens
@@ -61,7 +62,16 @@ fun BottomNavigation(navController: NavController) {
 
             NavigationBarItem(
                 selected = false,
-                onClick = { navController.navigate(item.route) },
+                onClick = { navController.navigate(item.route){
+
+                    popUpTo(MpesaExpenseTrackerScreens.DashboardScreen.name) {
+                        saveState = true
+                    }
+
+                    launchSingleTop = true
+
+                    restoreState = true
+                } },
                 label = {
                     Text(
                         modifier = Modifier.padding(0.dp),
