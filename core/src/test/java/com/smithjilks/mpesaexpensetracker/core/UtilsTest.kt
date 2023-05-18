@@ -36,4 +36,17 @@ class UtilsTest {
 
     }
 
+    @Test
+    fun testIsPhoneNumberValid() {
+        assertTrue(Utils.isValidPhoneNumber("0712345678"))
+        assertTrue(Utils.isValidPhoneNumber("0112345678"))
+        assertFalse(Utils.isValidPhoneNumber("254712345678"))
+        assertFalse(Utils.isValidPhoneNumber("254712345678"))
+        assertFalse(Utils.isValidPhoneNumber("+2540712345678"))
+        assertFalse(Utils.isValidPhoneNumber("071235678c"))
+        assertFalse(Utils.isValidPhoneNumber("0712345678g"))
+        assertFalse(Utils.isValidPhoneNumber("71234568"))
+        assertFalse(Utils.isValidPhoneNumber("7123456897"))
+    }
+
 }

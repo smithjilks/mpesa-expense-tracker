@@ -1,5 +1,6 @@
 package com.smithjilks.mpesaexpensetracker.core.utils
 
+import androidx.core.text.isDigitsOnly
 import androidx.core.util.PatternsCompat
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -55,5 +56,10 @@ object Utils {
                 formatDate(timestamp)
             }
         }
+    }
+
+    fun isValidPhoneNumber(phoneNumber: String): Boolean {
+        val phoneNumberRegex = "^(01|07)[0-9]{8}"
+        return phoneNumber.trim().matches(Regex(phoneNumberRegex))
     }
 }

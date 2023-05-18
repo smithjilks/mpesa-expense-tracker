@@ -11,6 +11,7 @@ data class Record(
     val recordId: String,
     val category: String,
     val amount: String,
+    val transactionCost: String,
     val note: String,
     val timestamp: Int,
     val account: String,

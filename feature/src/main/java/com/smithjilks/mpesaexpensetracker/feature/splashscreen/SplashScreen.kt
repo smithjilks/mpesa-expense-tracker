@@ -43,7 +43,7 @@ fun SplashScreen(navController: NavController) {
                     OvershootInterpolator(8f).getInterpolation(it)
                 }
             ))
-        delay(1500L)
+        delay(900L)
         navController.navigate(MpesaExpenseTrackerScreens.DashboardScreen.name) {
             popUpTo(MpesaExpenseTrackerScreens.SplashScreen.name){ inclusive = true }
         }
