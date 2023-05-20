@@ -1,6 +1,8 @@
 package com.smithjilks.mpesaexpensetracker
 
+import android.content.IntentFilter
 import android.os.Bundle
+import android.provider.Telephony
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.smithjilks.mpesaexpensetracker.core.theme.MpesaExpenseTrackerTheme
+import com.smithjilks.mpesaexpensetracker.core.utils.Permissions
+import com.smithjilks.mpesaexpensetracker.core.utils.SmsBroadcastReceiver
 import com.smithjilks.mpesaexpensetracker.navigation.MpesaExpenseTrackerNavigation
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,6 +24,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val intentFilter = IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)
+        Permissions.requestSmsPermission(this)
+        registerReceiver(SmsBroadcastReceiver() {}, intentFilter)
         setContent {
             MpesaExpenseTrackerApp()
         }

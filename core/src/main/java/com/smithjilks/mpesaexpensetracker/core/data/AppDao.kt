@@ -50,8 +50,14 @@ interface AppDao {
     @Query("SELECT * FROM records_table")
     fun getAllRecords(): Flow<List<Record>>
 
-    @Query("SELECT * FROM records_table where recordId =:id")
+    @Query("SELECT * FROM records_table ORDER BY id DESC LIMIT 10")
+    fun getRecentRecords(): Flow<List<Record>>
+
+    @Query("SELECT * FROM records_table where id =:id")
     suspend fun getRecordById(id: String): Record
+
+    @Query("SELECT * FROM records_table where transactionRef =:transactionRef")
+    suspend fun getRecordByTransactionRef(transactionRef: String): Record
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecord(record: Record)
@@ -65,3 +71,5 @@ interface AppDao {
     @Delete
     suspend fun deleteRecord(record: Record)
 }
+
+

@@ -30,6 +30,9 @@ object Libs {
     const val hiltCompiler ="com.google.dagger:hilt-compiler:2.44"
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:2.44"
 
+    object PlayServices {
+        const val authApiPhone = "com.google.android.gms:play-services-auth-api-phone:18.0.1"
+    }
 
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.4.1"

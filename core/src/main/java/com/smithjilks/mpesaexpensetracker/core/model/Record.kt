@@ -2,13 +2,18 @@ package com.smithjilks.mpesaexpensetracker.core.model
 
 import androidx.annotation.NonNull
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "records_table")
+@Entity(
+    tableName = "records_table",
+    indices = [Index(value = ["transactionRef"], unique = true)]
+)
 data class Record(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
-    val recordId: String,
+    val id: Int = 0,
+    val transactionRef: String,
     val category: String,
     val amount: String,
     val transactionCost: String,
@@ -16,5 +21,6 @@ data class Record(
     val timestamp: Int,
     val account: String,
     val payee: String,
-    val recordType: String
+    val recordType: String,
+    val recordImageResourceId: Int
 )

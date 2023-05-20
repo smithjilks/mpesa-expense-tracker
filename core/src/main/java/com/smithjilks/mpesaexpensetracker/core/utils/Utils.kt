@@ -2,6 +2,7 @@ package com.smithjilks.mpesaexpensetracker.core.utils
 
 import androidx.core.text.isDigitsOnly
 import androidx.core.util.PatternsCompat
+import com.smithjilks.mpesaexpensetracker.core.model.Record
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.format.DateTimeFormatter
@@ -61,5 +62,32 @@ object Utils {
     fun isValidPhoneNumber(phoneNumber: String): Boolean {
         val phoneNumberRegex = "^(01|07)[0-9]{8}"
         return phoneNumber.trim().matches(Regex(phoneNumberRegex))
+    }
+
+    fun sumAmountAndTransactionCost(amount: String, transactionCost: String): String {
+        return formatAmount(amount.toDouble() + transactionCost.toDouble())
+    }
+
+    fun createRecordFromMpesaMessage(message: String) {
+
+        //Account for withdrawal
+        // withdrawal
+
+        //Account for Received money
+        //received
+
+        //Account for paybill
+        //for account
+
+        //Account for pochi
+
+        //Account for buy goods
+        // paid to
+
+        //Account for airtime
+        // airtime
+
+
+
     }
 }

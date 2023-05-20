@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class AppDatabaseRepository @Inject constructor(
     private val appDao: AppDao
-    ) {
+) {
 
     // User
     fun getUser(): User = appDao.getUser()
@@ -25,8 +25,13 @@ class AppDatabaseRepository @Inject constructor(
     suspend fun deleteAllCategories() = appDao.deleteAllCategories()
 
     // Records
-    fun getRecords() = appDao.getAllCategories()
+    fun getAllRecords() = appDao.getAllRecords()
+    fun getRecentRecords() = appDao.getRecentRecords()
     suspend fun getRecordById(id: String) = appDao.getRecordById(id)
+
+    suspend fun getRecordByTransactionRef(transactionRef: String) =
+        appDao.getRecordByTransactionRef(transactionRef)
+
     suspend fun insertRecord(record: Record) = appDao.insertRecord(record)
     suspend fun updateRecord(record: Record) = appDao.updateRecord(record)
     suspend fun deleteRecord(record: Record) = appDao.deleteRecord(record)

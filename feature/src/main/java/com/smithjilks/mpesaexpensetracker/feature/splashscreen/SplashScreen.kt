@@ -1,5 +1,7 @@
 package com.smithjilks.mpesaexpensetracker.feature.splashscreen
 
+import android.content.IntentFilter
+import android.provider.Telephony
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -23,9 +25,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.navigation.NavController
 import com.smithjilks.mpesaexpensetracker.feature.R
 import com.smithjilks.mpesaexpensetracker.core.constants.MpesaExpenseTrackerScreens
+import com.smithjilks.mpesaexpensetracker.core.utils.Permissions
+import com.smithjilks.mpesaexpensetracker.core.utils.SmsBroadcastReceiver
 import kotlinx.coroutines.delay
 
 @Composable

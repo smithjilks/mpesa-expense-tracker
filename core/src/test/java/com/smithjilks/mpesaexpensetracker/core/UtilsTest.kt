@@ -49,4 +49,11 @@ class UtilsTest {
         assertFalse(Utils.isValidPhoneNumber("7123456897"))
     }
 
+    @Test
+    fun testSumAmountAndTransactionCost() {
+        assertTrue("120.00" == Utils.sumAmountAndTransactionCost("100", "20"))
+        assertFalse("110.00" == Utils.sumAmountAndTransactionCost("100", "20"))
+
+    }
+
 }

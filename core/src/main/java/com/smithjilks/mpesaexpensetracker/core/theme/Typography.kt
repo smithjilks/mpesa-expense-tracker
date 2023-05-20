@@ -28,7 +28,7 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
     bodySmall =TextStyle(
-        fontFamily = Domine,
+        fontFamily = Montserrat,
     ),
     headlineLarge = TextStyle(
         fontFamily = Montserrat,
