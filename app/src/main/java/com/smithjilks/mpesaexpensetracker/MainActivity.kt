@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val intentFilter = IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)
         Permissions.requestSmsPermission(this)
-        registerReceiver(SmsBroadcastReceiver() {}, intentFilter)
         setContent {
             MpesaExpenseTrackerApp()
         }

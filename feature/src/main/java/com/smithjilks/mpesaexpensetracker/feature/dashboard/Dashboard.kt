@@ -1,23 +1,17 @@
 package com.smithjilks.mpesaexpensetracker.feature.dashboard
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
@@ -30,26 +24,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
 import com.smithjilks.mpesaexpensetracker.core.model.Record
-import com.smithjilks.mpesaexpensetracker.core.utils.DataOrException
 import com.smithjilks.mpesaexpensetracker.core.utils.Utils
 import com.smithjilks.mpesaexpensetracker.core.widgets.BottomNavigation
 import com.smithjilks.mpesaexpensetracker.feature.R
@@ -80,13 +67,12 @@ fun MainDashboardContent(dashboardViewModel: DashboardViewModel, modifier: Modif
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-
         val recentRecords = dashboardViewModel.recentRecordsList.collectAsState().value
 
-        val record = Record(
-            1,
+        val record1 = Record(
+            0,
             "BXMASNJAS",
-            "Transport",
+            "Received",
             "300.00",
             "20.00",
             "MY first Note",
@@ -99,8 +85,8 @@ fun MainDashboardContent(dashboardViewModel: DashboardViewModel, modifier: Modif
         )
 
         val record2 = Record(
-            1,
-            "BXMASNJAS",
+            0,
+            "BXMAUNJAS",
             "Shopping",
             "270.00",
             "20.00",
@@ -112,7 +98,39 @@ fun MainDashboardContent(dashboardViewModel: DashboardViewModel, modifier: Modif
             R.drawable.shopping_icon
         )
 
-        IncomeAndExpenseSummaryRow(income = "2000", expense = "30000")
+        val record3 = Record(
+            0,
+            "BXMAYUNJAS",
+            "Shopping",
+            "290.00",
+            "10.00",
+            "MY first Note",
+            Date().time.toInt(),
+            "",
+            "",
+            AppConstants.EXPENSE,
+            R.drawable.shopping_icon
+        )
+
+        val record4 = Record(
+            0,
+            "BXQAAYNJAS",
+            "Electricity",
+            "9990.00",
+            "390.00",
+            "MY first Note",
+            Date().time.toInt(),
+            "",
+            "",
+            AppConstants.EXPENSE,
+            R.drawable.shopping_icon
+        )
+
+
+        //dashboardViewModel.insertRecords(listOf(record1, record2, record3, record4, record2))
+
+        IncomeAndExpenseSummaryRow(income = Utils.formatAmount(dashboardViewModel.totalIncome),
+            expense = Utils.formatAmount(dashboardViewModel.totalExpenses))
 
         Text(
             text = "Recent Transactions",
@@ -123,7 +141,7 @@ fun MainDashboardContent(dashboardViewModel: DashboardViewModel, modifier: Modif
         )
 
         LazyColumn {
-            items(listOf(record, record2, record, record2)) {
+            items(recentRecords) {
                 RecordSummaryRow(
                     it
                 )
@@ -177,16 +195,17 @@ fun IncomeExpenseCard(
 
     ElevatedCard(
         modifier = modifier
-            .background(color = Color.Transparent),
+            .background(color = Color.Transparent)
+            .padding(horizontal = 8.dp),
         shape = CardDefaults.elevatedShape,
         elevation = CardDefaults.elevatedCardElevation(),
     ) {
         Row(
             modifier = modifier
                 .background(color = backgroundColor)
-                .padding(8.dp),
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
 
             Image(
@@ -203,18 +222,18 @@ fun IncomeExpenseCard(
 
                 Text(
                     text = if (isIncome) "Income" else "Expense",
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.End,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = modifier.padding(horizontal = 8.dp),
+                    modifier = modifier.padding(end = 8.dp),
                 )
 
                 Text(
                     "Ksh. $amount",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.End,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = modifier.padding(horizontal = 8.dp),
+                    modifier = modifier.padding(end = 8.dp),
                 )
 
             }
@@ -290,7 +309,7 @@ fun ColumnNoteAndCategory(record: Record, modifier: Modifier = Modifier) {
         ) {
 
             Icon(
-                imageVector = ImageVector.vectorResource(record.recordImageResourceId),
+                imageVector = ImageVector.vectorResource(record.recordImageResourceId?: R.drawable.default_expense_icon),
                 contentDescription = "${record.category} Icon",
                 modifier = Modifier
                     .size(50.dp)

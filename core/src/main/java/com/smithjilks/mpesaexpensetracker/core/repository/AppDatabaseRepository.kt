@@ -1,5 +1,6 @@
 package com.smithjilks.mpesaexpensetracker.core.repository
 
+import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
 import com.smithjilks.mpesaexpensetracker.core.data.AppDao
 import com.smithjilks.mpesaexpensetracker.core.model.Category
 import com.smithjilks.mpesaexpensetracker.core.model.Record
@@ -26,13 +27,15 @@ class AppDatabaseRepository @Inject constructor(
 
     // Records
     fun getAllRecords() = appDao.getAllRecords()
+    fun getAllIncomeRecords() = appDao.getAllRecordsByRecordType(AppConstants.INCOME)
+    fun getAllExpenseRecords() = appDao.getAllRecordsByRecordType(AppConstants.EXPENSE)
     fun getRecentRecords() = appDao.getRecentRecords()
     suspend fun getRecordById(id: String) = appDao.getRecordById(id)
-
     suspend fun getRecordByTransactionRef(transactionRef: String) =
         appDao.getRecordByTransactionRef(transactionRef)
-
     suspend fun insertRecord(record: Record) = appDao.insertRecord(record)
+
+    suspend fun insertRecords(records: List<Record>) = appDao.insertRecords(records)
     suspend fun updateRecord(record: Record) = appDao.updateRecord(record)
     suspend fun deleteRecord(record: Record) = appDao.deleteRecord(record)
     suspend fun deleteAllRecords() = appDao.deleteAllRecords()

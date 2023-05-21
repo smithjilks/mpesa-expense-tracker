@@ -6,10 +6,18 @@ import android.content.Intent
 import android.provider.Telephony
 import android.util.Log
 import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
+import com.smithjilks.mpesaexpensetracker.core.repository.AppDatabaseRepository
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class SmsBroadcastReceiver(private val callback: (mpesaMessage: String) -> Unit) :
-    BroadcastReceiver() {
+@AndroidEntryPoint
+class SmsBroadcastReceiver : BroadcastReceiver() {
+    @Inject lateinit var repository: AppDatabaseRepository
+    @Inject lateinit var ioDispatcher: CoroutineDispatcher
     companion object {
         private val TAG = SmsBroadcastReceiver::class.java.name
 
@@ -20,11 +28,18 @@ class SmsBroadcastReceiver(private val callback: (mpesaMessage: String) -> Unit)
         val extractMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         extractMessages.forEach { smsMessage ->
             if (smsMessage.displayOriginatingAddress == AppConstants.MPESA) {
-                callback.invoke(smsMessage.displayMessageBody)
-                Log.d(TAG, smsMessage.displayMessageBody)
-                Log.d(TAG, smsMessage.displayOriginatingAddress)
+                // handle smsMessage.displayMessageBody
+                val record = Utils.createRecordFromMpesaMessage(smsMessage.displayMessageBody)
+                record?.let {
+                    CoroutineScope(ioDispatcher).launch {
+                        repository.insertRecord(it)
+                        Log.d(TAG, "Added $record")
+                        Log.d(TAG, smsMessage.displayOriginatingAddress)
+                    }
+                }
             }
         }
     }
+
 
 }

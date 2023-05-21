@@ -30,6 +30,9 @@ val Typography = Typography(
     bodySmall =TextStyle(
         fontFamily = Montserrat,
     ),
+    bodyMedium =TextStyle(
+        fontFamily = Montserrat,
+    ),
     headlineLarge = TextStyle(
         fontFamily = Montserrat,
     ),

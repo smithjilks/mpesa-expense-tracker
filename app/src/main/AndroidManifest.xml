@@ -36,7 +36,7 @@
             android:exported="true"
             android:enabled="true">
             <intent-filter>
-                <action android:name="com.smithjilks.mpesaexpensetracker.SMS_BROADCAST_RECEIVER" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
     </application>

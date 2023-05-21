@@ -8,7 +8,7 @@ import com.smithjilks.mpesaexpensetracker.core.model.User
 
 @Database(
     entities = [User::class, Category::class, Record::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

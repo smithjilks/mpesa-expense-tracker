@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
 import com.smithjilks.mpesaexpensetracker.core.model.Category
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.model.User
@@ -53,6 +54,9 @@ interface AppDao {
     @Query("SELECT * FROM records_table ORDER BY id DESC LIMIT 10")
     fun getRecentRecords(): Flow<List<Record>>
 
+    @Query("SELECT * FROM records_table WHERE recordType =:recordType")
+    fun getAllRecordsByRecordType(recordType: String): Flow<List<Record>>
+
     @Query("SELECT * FROM records_table where id =:id")
     suspend fun getRecordById(id: String): Record
 
@@ -61,6 +65,9 @@ interface AppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecord(record: Record)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecords(records: List<Record>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateRecord(record: Record)

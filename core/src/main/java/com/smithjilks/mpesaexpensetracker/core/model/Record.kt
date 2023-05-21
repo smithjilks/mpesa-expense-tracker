@@ -22,5 +22,5 @@ data class Record(
     val account: String,
     val payee: String,
     val recordType: String,
-    val recordImageResourceId: Int
+    val recordImageResourceId: Int?
 )
