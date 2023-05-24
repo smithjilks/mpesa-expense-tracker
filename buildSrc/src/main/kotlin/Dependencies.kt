@@ -34,6 +34,10 @@ object Libs {
         const val authApiPhone = "com.google.android.gms:play-services-auth-api-phone:18.0.1"
     }
 
+    object Accompanist{
+        const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
+    }
+
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.4.1"
         const val ktxCore = "androidx.core:core-ktx:1.10.0"

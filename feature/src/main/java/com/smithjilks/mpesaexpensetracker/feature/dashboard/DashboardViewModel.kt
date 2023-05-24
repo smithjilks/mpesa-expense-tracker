@@ -31,7 +31,7 @@ class DashboardViewModel@Inject constructor(
     private val _recentRecordsList = MutableStateFlow<List<Record>>(emptyList())
     val recentRecordsList = _recentRecordsList.asStateFlow()
 
-    var totalIncome by mutableStateOf(0.0)
+    var totalIncome by  mutableStateOf(0.0)
     private set
 
     var totalExpenses by mutableStateOf(0.0)

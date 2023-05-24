@@ -75,6 +75,9 @@ dependencies {
     kapt(Libs.hiltAndroidCompiler)
     implementation(Libs.AndroidX.Compose.hiltNavigation)
 
+    implementation(Libs.Accompanist.systemUiController)
+
+
     implementation(project(":core"))
 
 

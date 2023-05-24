@@ -26,27 +26,6 @@ interface AppDao {
     suspend fun deleteUserData()
 
 
-    // Categories Queries
-    @Query("SELECT * FROM categories_table")
-    fun getAllCategories(): Flow<List<Category>>
-
-    @Query("SELECT * FROM categories_table where id =:id")
-    suspend fun getCategoryById(id: Int): Category
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCategory(category: Category)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateCategory(category: Category)
-
-    @Query("DELETE FROM categories_table")
-    suspend fun deleteAllCategories()
-
-    @Delete
-    suspend fun deleteCategory(category: Category)
-
-
-
     // Records queries
     @Query("SELECT * FROM records_table")
     fun getAllRecords(): Flow<List<Record>>
@@ -58,7 +37,7 @@ interface AppDao {
     fun getAllRecordsByRecordType(recordType: String): Flow<List<Record>>
 
     @Query("SELECT * FROM records_table where id =:id")
-    suspend fun getRecordById(id: String): Record
+    suspend fun getRecordById(id: Int): Record
 
     @Query("SELECT * FROM records_table where transactionRef =:transactionRef")
     suspend fun getRecordByTransactionRef(transactionRef: String): Record

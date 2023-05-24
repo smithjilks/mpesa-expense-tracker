@@ -17,20 +17,12 @@ class AppDatabaseRepository @Inject constructor(
     suspend fun insertUser(user: User) = appDao.insertUser(user)
     suspend fun deleteUserData() = appDao.deleteUserData()
 
-    // Categories
-    fun getCategories() = appDao.getAllCategories()
-    suspend fun getCategoryById(id: Int) = appDao.getCategoryById(id)
-    suspend fun insertCategory(category: Category) = appDao.insertCategory(category)
-    suspend fun updateCategory(category: Category) = appDao.updateCategory(category)
-    suspend fun deleteCategory(category: Category) = appDao.deleteCategory(category)
-    suspend fun deleteAllCategories() = appDao.deleteAllCategories()
-
     // Records
     fun getAllRecords() = appDao.getAllRecords()
     fun getAllIncomeRecords() = appDao.getAllRecordsByRecordType(AppConstants.INCOME)
     fun getAllExpenseRecords() = appDao.getAllRecordsByRecordType(AppConstants.EXPENSE)
     fun getRecentRecords() = appDao.getRecentRecords()
-    suspend fun getRecordById(id: String) = appDao.getRecordById(id)
+    suspend fun getRecordById(id: Int) = appDao.getRecordById(id)
     suspend fun getRecordByTransactionRef(transactionRef: String) =
         appDao.getRecordByTransactionRef(transactionRef)
     suspend fun insertRecord(record: Record) = appDao.insertRecord(record)

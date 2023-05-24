@@ -19,14 +19,14 @@ object Utils {
     }
 
     fun formatDate(timestamp: Int): String {
-        val sdf = SimpleDateFormat("EEE, MMM d yyyy", Locale.UK)
+        val sdf = SimpleDateFormat("EEE, MMM d yyyy", Locale.getDefault())
         val date = Date(timestamp.toLong() * 1000)
 
         return sdf.format(date)
     }
 
     fun formatTime(timestamp: Int): String {
-        val sdf = SimpleDateFormat("hh:mm", Locale.UK)
+        val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
         val date = Date(timestamp.toLong() * 1000)
 
         // DateTimeFormatter is more Thread safe approach however requires > API Level 26
@@ -37,6 +37,12 @@ object Utils {
 //        DateTimeFormatter.ofPattern("hh:mm", Locale.getDefault())
 //            .format(Instant.ofEpochMilli(timestamp.toLong() * 1000))
 
+        return sdf.format(date)
+    }
+
+    fun formatDate(dateMillis: Long): String {
+        val sdf = SimpleDateFormat("dd/M/yy", Locale.getDefault())
+        val date = Date(dateMillis)
         return sdf.format(date)
     }
 
@@ -250,10 +256,8 @@ object Utils {
 
         if (date != null && time != null) {
             val format = SimpleDateFormat("dd/M/yy hh:mm a", Locale.UK)
-            val date = format.parse("$date $time")
-            println(date)
-
-            return date.time.div(1000L).toInt()
+            val newDate = format.parse("$date $time")
+            return newDate.time.div(1000L).toInt()
         }
         return 0
     }

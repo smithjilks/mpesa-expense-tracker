@@ -3,6 +3,7 @@ package com.smithjilks.mpesaexpensetracker.feature.dashboard
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,11 +13,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,9 +39,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
+import com.smithjilks.mpesaexpensetracker.core.constants.MpesaExpenseTrackerScreens
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.utils.Utils
 import com.smithjilks.mpesaexpensetracker.core.widgets.BottomNavigation
@@ -54,13 +62,20 @@ fun Dashboard(
             BottomNavigation(navController)
         }
     ) {
-        MainDashboardContent(dashboardViewModel)
+        MainDashboardContent(
+            dashboardViewModel = dashboardViewModel,
+            navController = navController
+        )
     }
 
 }
 
 @Composable
-fun MainDashboardContent(dashboardViewModel: DashboardViewModel, modifier: Modifier = Modifier) {
+fun MainDashboardContent(
+    modifier: Modifier = Modifier,
+    dashboardViewModel: DashboardViewModel,
+    navController: NavController
+) {
 
     Column(
         modifier = modifier.padding(8.dp),
@@ -69,85 +84,55 @@ fun MainDashboardContent(dashboardViewModel: DashboardViewModel, modifier: Modif
     ) {
         val recentRecords = dashboardViewModel.recentRecordsList.collectAsState().value
 
-        val record1 = Record(
-            0,
-            "BXMASNJAS",
-            "Received",
-            "300.00",
-            "20.00",
-            "MY first Note",
-            Date().time.toInt(),
-            "",
-            "",
-            AppConstants.INCOME,
-            R.drawable.transport_icon
-
+        IncomeAndExpenseSummaryRow(
+            income = Utils.formatAmount(dashboardViewModel.totalIncome),
+            expense = Utils.formatAmount(dashboardViewModel.totalExpenses)
         )
 
-        val record2 = Record(
-            0,
-            "BXMAUNJAS",
-            "Shopping",
-            "270.00",
-            "20.00",
-            "MY first Note",
-            Date().time.toInt(),
-            "",
-            "",
-            AppConstants.EXPENSE,
-            R.drawable.shopping_icon
-        )
+        Row(
+            modifier = modifier.padding(8.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-        val record3 = Record(
-            0,
-            "BXMAYUNJAS",
-            "Shopping",
-            "290.00",
-            "10.00",
-            "MY first Note",
-            Date().time.toInt(),
-            "",
-            "",
-            AppConstants.EXPENSE,
-            R.drawable.shopping_icon
-        )
+            Text(
+                text = "Recent Transactions",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = modifier.padding(vertical = 2.dp),
+                fontWeight = FontWeight.Bold
+            )
 
-        val record4 = Record(
-            0,
-            "BXQAAYNJAS",
-            "Electricity",
-            "9990.00",
-            "390.00",
-            "MY first Note",
-            Date().time.toInt(),
-            "",
-            "",
-            AppConstants.EXPENSE,
-            R.drawable.shopping_icon
-        )
+            ElevatedButton(
+                onClick = {
+                    navController.navigate(MpesaExpenseTrackerScreens.RecordsScreen.name)
+                },
+                modifier = Modifier
+                    .padding(vertical = 2.dp),
+                shape = ButtonDefaults.elevatedShape,
+                colors = ButtonDefaults.elevatedButtonColors()
+            ) {
+                Text(
+                    text = "See All",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
 
 
-        //dashboardViewModel.insertRecords(listOf(record1, record2, record3, record4, record2))
+        }
 
-        IncomeAndExpenseSummaryRow(income = Utils.formatAmount(dashboardViewModel.totalIncome),
-            expense = Utils.formatAmount(dashboardViewModel.totalExpenses))
-
-        Text(
-            text = "Recent Transactions",
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Start,
-            modifier = modifier.padding(top = 16.dp, bottom = 8.dp),
-            fontWeight = FontWeight.Bold
-        )
 
         LazyColumn {
             items(recentRecords) {
                 RecordSummaryRow(
-                    it
+                    modifier = Modifier.clickable {
+                        navController.navigate(
+                            "${MpesaExpenseTrackerScreens.RecordDetailsScreen.name}?recordId=${it.id}"
+                        )
+                    },
+                    record = it,
                 )
             }
         }
-
     }
 
 
@@ -158,7 +143,7 @@ fun IncomeAndExpenseSummaryRow(modifier: Modifier = Modifier, income: String, ex
 
     Row(
         modifier = modifier
-            .padding(16.dp)
+            .padding(vertical = 16.dp, horizontal = 8.dp)
             .fillMaxWidth()
             .background(color = Color.Transparent),
         verticalAlignment = Alignment.CenterVertically,
@@ -309,7 +294,9 @@ fun ColumnNoteAndCategory(record: Record, modifier: Modifier = Modifier) {
         ) {
 
             Icon(
-                imageVector = ImageVector.vectorResource(record.recordImageResourceId?: R.drawable.default_expense_icon),
+                imageVector = ImageVector.vectorResource(
+                    record.recordImageResourceId ?: R.drawable.default_expense_icon
+                ),
                 contentDescription = "${record.category} Icon",
                 modifier = Modifier
                     .size(50.dp)

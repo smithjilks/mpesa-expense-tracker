@@ -21,7 +21,7 @@ class UtilsTest {
     @Test
     fun testFormatDateTime() {
         assertTrue("Fri, May 12 2023" == Utils.formatDate(1683898085))
-        assertTrue("04:28" == Utils.formatTime(1683898085))
+        assertTrue("04:28 pm" == Utils.formatTime(1683898085))
 
     }
 
