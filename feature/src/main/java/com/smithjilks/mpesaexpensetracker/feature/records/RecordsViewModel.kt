@@ -9,6 +9,9 @@ import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.repository.AppDatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +25,20 @@ class RecordsViewModel @Inject constructor(
         Record(0, "","","","","",0,"","","", null)
     )
         private set
+
+    private val _allRecordsList = MutableStateFlow<List<Record>>(emptyList())
+    val allRecordsList = _allRecordsList.asStateFlow()
+    init {
+        viewModelScope.launch(ioDispatcher) {
+            repository.getRecentRecords().distinctUntilChanged().collect { listOfRecentRecords ->
+                if (listOfRecentRecords.isNotEmpty()) {
+                    _allRecordsList.value = listOfRecentRecords
+                } else {
+                    emptyList<Record>()
+                }
+            }
+        }
+    }
 
     fun getRecordById(id: Int) {
         viewModelScope.launch(ioDispatcher) {

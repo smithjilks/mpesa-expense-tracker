@@ -52,9 +52,9 @@ fun BottomNavigation(navController: NavController) {
             icon = ImageVector.vectorResource(R.drawable.dashboard_icon)
         ),
         BottomNavigationItem(
-            name = "New Record",
-            route = MpesaExpenseTrackerScreens.RecordDetailsScreen.name,
-            icon = ImageVector.vectorResource(R.drawable.create_record_icon)
+            name = "All Records",
+            route = MpesaExpenseTrackerScreens.RecordsScreen.name,
+            icon = ImageVector.vectorResource(R.drawable.records_icon)
         ),
         BottomNavigationItem(
             name = "Statistics",
@@ -68,7 +68,7 @@ fun BottomNavigation(navController: NavController) {
             .fillMaxWidth()
             .padding(8.dp)
             .border(
-                border = BorderStroke(width = 0.25.dp, color = Color.LightGray),
+                border = BorderStroke(width = 0.25.dp, MaterialTheme.colorScheme.onSurface),
                 shape = RoundedCornerShape(4.dp)
             ),
         containerColor = Color.Transparent,

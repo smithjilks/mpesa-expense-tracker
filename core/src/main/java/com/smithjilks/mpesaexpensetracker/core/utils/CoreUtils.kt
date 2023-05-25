@@ -8,7 +8,7 @@ import java.util.Date
 import java.util.Locale
 
 
-object Utils {
+object CoreUtils {
     fun isEmailValid(email: String): Boolean {
         return PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
     }
@@ -69,7 +69,10 @@ object Utils {
     }
 
     fun sumAmountAndTransactionCost(amount: String, transactionCost: String): String {
-        return formatAmount(amount.toDouble() + transactionCost.toDouble())
+        return formatAmount(
+            amount.replace(",","").toDouble()
+                    + transactionCost.replace(",","").toDouble()
+        )
     }
 
     fun createRecordFromMpesaMessage(message: String): Record? {

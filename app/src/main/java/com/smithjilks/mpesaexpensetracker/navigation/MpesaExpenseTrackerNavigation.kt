@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.smithjilks.mpesaexpensetracker.feature.dashboard.Dashboard
 import com.smithjilks.mpesaexpensetracker.core.constants.MpesaExpenseTrackerScreens
 import com.smithjilks.mpesaexpensetracker.feature.records.RecordDetailsScreen
+import com.smithjilks.mpesaexpensetracker.feature.records.RecordsScreen
 import com.smithjilks.mpesaexpensetracker.feature.splashscreen.SplashScreen
 
 @Composable
@@ -33,6 +34,7 @@ fun MpesaExpenseTrackerNavigation() {
         }
 
         composable(MpesaExpenseTrackerScreens.RecordsScreen.name) {
+            RecordsScreen(navController = navController)
 
         }
 

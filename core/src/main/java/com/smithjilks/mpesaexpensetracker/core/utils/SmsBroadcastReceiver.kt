@@ -29,7 +29,7 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
         extractMessages.forEach { smsMessage ->
             if (smsMessage.displayOriginatingAddress == AppConstants.MPESA) {
                 // handle smsMessage.displayMessageBody
-                val record = Utils.createRecordFromMpesaMessage(smsMessage.displayMessageBody)
+                val record = CoreUtils.createRecordFromMpesaMessage(smsMessage.displayMessageBody)
                 record?.let {
                     CoroutineScope(ioDispatcher).launch {
                         repository.insertRecord(it)

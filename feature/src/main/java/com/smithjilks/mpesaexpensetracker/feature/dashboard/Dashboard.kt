@@ -13,16 +13,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,13 +39,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
 import com.smithjilks.mpesaexpensetracker.core.constants.MpesaExpenseTrackerScreens
 import com.smithjilks.mpesaexpensetracker.core.model.Record
-import com.smithjilks.mpesaexpensetracker.core.utils.Utils
+import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
 import com.smithjilks.mpesaexpensetracker.core.widgets.BottomNavigation
 import com.smithjilks.mpesaexpensetracker.feature.R
 import java.util.Date
@@ -60,6 +59,15 @@ fun Dashboard(
     Scaffold(
         bottomBar = {
             BottomNavigation(navController)
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(MpesaExpenseTrackerScreens.RecordDetailsScreen.name)
+                          },
+            ) {
+                Icon(Icons.Filled.Edit, "Create new record button")
+            }
         }
     ) {
         MainDashboardContent(
@@ -85,12 +93,14 @@ fun MainDashboardContent(
         val recentRecords = dashboardViewModel.recentRecordsList.collectAsState().value
 
         IncomeAndExpenseSummaryRow(
-            income = Utils.formatAmount(dashboardViewModel.totalIncome),
-            expense = Utils.formatAmount(dashboardViewModel.totalExpenses)
+            income = CoreUtils.formatAmount(dashboardViewModel.totalIncome),
+            expense = CoreUtils.formatAmount(dashboardViewModel.totalExpenses)
         )
 
         Row(
-            modifier = modifier.padding(8.dp).fillMaxWidth(),
+            modifier = modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -257,7 +267,7 @@ fun ColumnAmountAndDate(record: Record, modifier: Modifier = Modifier) {
     ) {
         Text(
             text = "${if (record.recordType == AppConstants.INCOME) "+" else "-"}Ksh. ${
-                Utils.sumAmountAndTransactionCost(
+                CoreUtils.sumAmountAndTransactionCost(
                     record.amount,
                     record.transactionCost
                 )
@@ -270,7 +280,7 @@ fun ColumnAmountAndDate(record: Record, modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = Utils.formatDate(record.timestamp),
+            text = CoreUtils.formatDate(record.timestamp),
             style = MaterialTheme.typography.labelSmall,
             textAlign = TextAlign.End,
             color = Color.LightGray,

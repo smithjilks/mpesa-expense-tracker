@@ -1,7 +1,6 @@
 package com.smithjilks.mpesaexpensetracker.feature.records
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,17 +43,18 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
 import com.smithjilks.mpesaexpensetracker.core.model.Category
 import com.smithjilks.mpesaexpensetracker.core.model.Record
-import com.smithjilks.mpesaexpensetracker.core.utils.Utils
+import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
+import com.smithjilks.mpesaexpensetracker.core.widgets.AppDatePickerDialog
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppInputTextField
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppSpinner
 import com.smithjilks.mpesaexpensetracker.core.widgets.TimePickerDialog
 import com.smithjilks.mpesaexpensetracker.feature.R
+import com.smithjilks.mpesaexpensetracker.feature.utils.FeatureUtils
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -128,8 +128,8 @@ fun RecordDetailsContent(
             recordType = recordsViewModel.dbRecord.recordType
             account = recordsViewModel.dbRecord.account
             payee = recordsViewModel.dbRecord.payee
-            date = Utils.formatDate(recordsViewModel.dbRecord.timestamp.toLong() * 1000)
-            time = Utils.formatTime(recordsViewModel.dbRecord.timestamp)
+            date = CoreUtils.formatDate(recordsViewModel.dbRecord.timestamp.toLong() * 1000)
+            time = CoreUtils.formatTime(recordsViewModel.dbRecord.timestamp)
         }
     }
 
@@ -239,10 +239,10 @@ fun RecordDetailsContent(
                         }
                     }
 
-                    //Catrgory Type spinner
+                    //Categories spinner
                     AppSpinner(
                         label = "Category",
-                        parentOptions = getCategoriesList(),
+                        parentOptions = FeatureUtils.getCategoriesList(),
                         onValueChange = { category = it }
                     )
 
@@ -350,11 +350,11 @@ fun RecordDetailsContent(
                             amount = amount,
                             transactionCost = transactionCost,
                             note = note,
-                            timestamp = Utils.convertDateAndTimeToTimestamp(date, time),
+                            timestamp = CoreUtils.convertDateAndTimeToTimestamp(date, time),
                             account = account,
                             payee = payee,
                             recordType = recordType,
-                            recordImageResourceId = getCategoriesList().first {
+                            recordImageResourceId = FeatureUtils.getCategoriesList().first {
                                 it.name == category
                             }.imageId
                         )
@@ -369,7 +369,7 @@ fun RecordDetailsContent(
                     shape = RoundedCornerShape(10.dp),
                     elevation = ButtonDefaults.buttonElevation(
                         defaultElevation = 4.dp
-                    ),
+                    )
                 ) {
                     Text(
                         text = "Continue",
@@ -380,40 +380,13 @@ fun RecordDetailsContent(
         }
     }
 
-    if (showDatePickerDialog) {
-        val datePickerState = rememberDatePickerState()
-        val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
-        DatePickerDialog(
-            onDismissRequest = {
-                // Dismiss the dialog when the user clicks outside the dialog or on the back
-                // button. If you want to disable that functionality, simply use an empty
-                // onDismissRequest.
-                showDatePickerDialog = false
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showDatePickerDialog = false
-                        date = Utils.formatDate(datePickerState.selectedDateMillis!!)
-                    },
-                    enabled = confirmEnabled.value
-                ) {
-                    Text("OK")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showDatePickerDialog = false
-                    }
-                ) {
-                    Text("Cancel")
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
+    AppDatePickerDialog(
+        showDatePickerDialog,
+        onValueChange = {
+            it?.let { date = it }
+            showDatePickerDialog = false
         }
-    }
+    )
 
     if (showTimePicker) {
         val timePickerState = rememberTimePickerState()
@@ -435,70 +408,5 @@ fun RecordDetailsContent(
     }
 
 }
-
-fun getCategoriesList(): List<Category> {
-    return listOf(
-        Category(name = "General Shopping", imageId = R.drawable.shopping_icon),
-
-        Category(name = "Airtime", imageId = R.drawable.airtime_icon),
-        Category(name = "WiFi", imageId = R.drawable.wifi_icon),
-        Category(name = "Data Bundles", imageId = R.drawable.data_bundle_icon),
-
-
-        Category(name = "Groceries", imageId = R.drawable.grocery_icon),
-        Category(name = "Restaurant, fast-food", imageId = R.drawable.restaurant_icon),
-        Category(name = "Liquor", imageId = R.drawable.liquor_icon),
-        Category(name = "Bar, Cafe", imageId = R.drawable.bar_icon),
-
-        Category(name = "Clothes and Shoes", imageId = R.drawable.clothes_icon_2),
-        Category(name = "Health and Beauty", imageId = R.drawable.health_and_beauty_icon),
-        Category(name = "Electronics", imageId = R.drawable.electronics_icon),
-        Category(name = "Gifts", imageId = R.drawable.gift_icon),
-        Category(name = "Stationery", imageId = R.drawable.stationery_icon),
-        Category(name = "Chemist, Drug Store", imageId = R.drawable.drugs_icon),
-
-        Category(name = "Rent", imageId = R.drawable.rent_icon),
-        Category(name = "Energy and Utilities", imageId = R.drawable.energy_utilities_icon),
-        Category(name = "Maintenance, Repairs", imageId = R.drawable.maintenance_repair_icon),
-
-
-        Category(name = "Public Transport", imageId = R.drawable.public_transport_icon),
-        Category(name = "Taxi, Cab", imageId = R.drawable.taxi_icon),
-
-
-        Category(name = "Fuel", imageId = R.drawable.fuel_icon),
-        Category(name = "Parking", imageId = R.drawable.parking_icon),
-        Category(name = "Vehicle Maintenance", imageId = R.drawable.vehicle_maintenance_icon),
-        Category(name = "Vehicle Rentals", imageId = R.drawable.vehicle_rental),
-        Category(name = "Vehicle Insurance", imageId = R.drawable.insurance_icon),
-
-        Category(name = "Healthcare", imageId = R.drawable.health_icon),
-        Category(name = "Wellness, Beauty", imageId = R.drawable.beauty_icon),
-        Category(name = "Fitness", imageId = R.drawable.fitness_icon),
-        Category(name = "Life Events, Birthdays, Funeral", imageId = R.drawable.events_icon),
-        Category(name = "Education", imageId = R.drawable.education_icon),
-        Category(name = "Subscriptions, Streaming", imageId = R.drawable.subscriptions_icon),
-        Category(name = "Holiday, Trips", imageId = R.drawable.holiday_icon),
-
-        Category(name = "Software, Apps, Games", imageId = R.drawable.games_icon),
-
-        Category(name = "Loans, Interests", imageId = R.drawable.income_arrow_icon),
-        Category(name = "Taxes", imageId = R.drawable.money_icon),
-        Category(name = "Fines, Charges", imageId = R.drawable.insurance_icon),
-        Category(name = "Child Support", imageId = R.drawable.child_support_icon),
-
-        Category(name = "Savings", imageId = R.drawable.savings_icon),
-        Category(name = "Money Market Fund", imageId = R.drawable.money_icon),
-        Category(name = "Collections, Chama", imageId = R.drawable.groups_icon),
-
-        Category(name = "Sales", imageId = R.drawable.sales_icon),
-        Category(name = "Wages, Invoices", imageId = R.drawable.income_arrow_icon),
-        Category(name = "Money Gifts", imageId = R.drawable.gift_icon),
-        Category(name = "Rental Income", imageId = R.drawable.rental_icon),
-        Category(name = "Reversals", imageId = R.drawable.reversal_icon),
-        Category(name = "Interests, Dividends", imageId = R.drawable.invest_icon),
-    )
-}
-
 
 
