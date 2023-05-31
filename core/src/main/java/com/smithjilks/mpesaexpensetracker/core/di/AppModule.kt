@@ -1,9 +1,7 @@
 package com.smithjilks.mpesaexpensetracker.core.di
 
 import android.content.Context
-import androidx.room.Database
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.smithjilks.mpesaexpensetracker.core.data.AppDao
 import com.smithjilks.mpesaexpensetracker.core.data.AppDatabase
 import dagger.Module

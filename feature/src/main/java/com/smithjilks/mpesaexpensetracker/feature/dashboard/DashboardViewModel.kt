@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.repository.AppDatabaseRepository
-import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +31,7 @@ class DashboardViewModel @Inject constructor(
         private set
 
     init {
-        viewModelScope.launch(ioDispatcher) {
+        effect {
             repository.getRecentRecords().distinctUntilChanged().collect { listOfRecentRecords ->
                 if (listOfRecentRecords.isNotEmpty()) {
                     _recentRecordsList.value = listOfRecentRecords
@@ -42,7 +41,7 @@ class DashboardViewModel @Inject constructor(
             }
         }
 
-        viewModelScope.launch(ioDispatcher) {
+        effect {
             repository.getAllExpenseRecords().distinctUntilChanged()
                 .collect { listOfExpenseRecords ->
                     if (listOfExpenseRecords.isNotEmpty()) {
@@ -53,14 +52,11 @@ class DashboardViewModel @Inject constructor(
                 }
         }
 
-        viewModelScope.launch(ioDispatcher) {
+        effect {
             repository.getAllIncomeRecords().distinctUntilChanged().collect { listOfIncomeRecords ->
                 if (listOfIncomeRecords.isNotEmpty()) {
                     listOfIncomeRecords.forEach {
-                        totalIncome += CoreUtils.sumAmountAndTransactionCost(
-                            it.amount,
-                            it.transactionCost
-                        ).toDouble()
+                        totalIncome += (it.amount + it.transactionCost)
                     }
                 }
             }
@@ -68,10 +64,9 @@ class DashboardViewModel @Inject constructor(
 
     }
 
+    fun insertRecords(records: List<Record>) = effect { repository.insertRecords(records) }
 
-    fun insertRecords(records: List<Record>) {
-        viewModelScope.launch(ioDispatcher) {
-            repository.insertRecords(records)
-        }
+    private fun effect(block: suspend () -> Unit) {
+        viewModelScope.launch(ioDispatcher) { block() }    // 4
     }
 }

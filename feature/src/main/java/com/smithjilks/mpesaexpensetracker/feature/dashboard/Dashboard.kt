@@ -267,10 +267,8 @@ fun ColumnAmountAndDate(record: Record, modifier: Modifier = Modifier) {
     ) {
         Text(
             text = "${if (record.recordType == AppConstants.INCOME) "+" else "-"}Ksh. ${
-                CoreUtils.sumAmountAndTransactionCost(
-                    record.amount,
-                    record.transactionCost
-                )
+                record.amount + record.transactionCost
+                
             }",
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.End,
@@ -280,7 +278,7 @@ fun ColumnAmountAndDate(record: Record, modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = CoreUtils.formatDate(record.timestamp),
+            text = CoreUtils.formatTimestamp(record.timestamp),
             style = MaterialTheme.typography.labelSmall,
             textAlign = TextAlign.End,
             color = Color.LightGray,
@@ -305,7 +303,7 @@ fun ColumnNoteAndCategory(record: Record, modifier: Modifier = Modifier) {
 
             Icon(
                 imageVector = ImageVector.vectorResource(
-                    record.recordImageResourceId ?: R.drawable.default_expense_icon
+                    record.recordImageResourceId ?: R.drawable.shopping_icon
                 ),
                 contentDescription = "${record.category} Icon",
                 modifier = Modifier
@@ -352,10 +350,10 @@ fun RecordSummaryRowPreview() {
         1,
         "BXMASNJAS",
         "Transport",
-        "300.00",
-        "20.00",
+        300,
+        20,
         "MY first Note",
-        Date().time.toInt(),
+        Date().time,
         "",
         "",
         AppConstants.INCOME,

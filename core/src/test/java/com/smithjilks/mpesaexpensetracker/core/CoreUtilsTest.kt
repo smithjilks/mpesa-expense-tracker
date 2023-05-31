@@ -10,18 +10,18 @@ import java.util.Date
 
 class CoreUtilsTest {
     @Test
-    fun testFormatDecimals() {
+    fun testFormatAmount() {
         val amount = 100.0
-        assertTrue("100.00" == CoreUtils.formatAmount(amount))
-        assertFalse("100.000" == CoreUtils.formatAmount(amount))
-        assertFalse("100.0" == CoreUtils.formatAmount(amount))
-        assertFalse("100" == CoreUtils.formatAmount(amount))
+        assertTrue("Ksh 100.00" == CoreUtils.formatAmount(amount))
+        assertFalse("Ksh 100.000" == CoreUtils.formatAmount(amount))
+        assertFalse("Ksh 100.0" == CoreUtils.formatAmount(amount))
+        assertFalse("Ksh 100" == CoreUtils.formatAmount(amount))
     }
 
     @Test
     fun testFormatDateTime() {
-        assertTrue("Fri, May 12 2023" == CoreUtils.formatDate(1683898085))
-        assertTrue("04:28 pm" == CoreUtils.formatTime(1683898085))
+        assertTrue("Fri, May 12 2023" == CoreUtils.formatTimestamp(1683898085000))
+        assertTrue("04:28 pm" == CoreUtils.formatTime(1683898085000))
 
     }
 
@@ -29,11 +29,11 @@ class CoreUtilsTest {
     fun testDaysAgo() {
         val MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24
 
-        assertTrue("Fri, May 12 2023" == CoreUtils.daysAgo(1683898085))
-        assertTrue("Today" == CoreUtils.daysAgo(Date().time.toInt()))
-        assertFalse("Yesterday" == CoreUtils.daysAgo(Date().time.toInt()))
-        assertTrue("Yesterday" == CoreUtils.daysAgo((Date().time - MILLIS_IN_A_DAY).toInt()))
-        assertFalse("Today" == CoreUtils.daysAgo((Date().time - MILLIS_IN_A_DAY).toInt()))
+        assertTrue("Fri, May 12 2023" == CoreUtils.daysAgo(1683898085000))
+        assertTrue("Today" == CoreUtils.daysAgo(Date().time))
+        assertFalse("Yesterday" == CoreUtils.daysAgo(Date().time))
+        assertTrue("Yesterday" == CoreUtils.daysAgo((Date().time - MILLIS_IN_A_DAY)))
+        assertFalse("Today" == CoreUtils.daysAgo((Date().time - MILLIS_IN_A_DAY)))
 
     }
 
@@ -51,16 +51,9 @@ class CoreUtilsTest {
     }
 
     @Test
-    fun testSumAmountAndTransactionCost() {
-        assertTrue("120.00" == CoreUtils.sumAmountAndTransactionCost("100", "20"))
-        assertFalse("110.00" == CoreUtils.sumAmountAndTransactionCost("100", "20"))
-
-    }
-
-    @Test
     fun testConvertDateAndTimeToTimestamp() {
-        assertTrue(1684587780 == CoreUtils.convertDateAndTimeToTimestamp("20/5/23", " 4:03 PM"))
-        assertTrue(0 == CoreUtils.convertDateAndTimeToTimestamp(null, null))
+        assertTrue(1684587780000 == CoreUtils.convertDateAndTimeToTimestamp("20/5/23", " 4:03 PM"))
+        assertTrue(0L == CoreUtils.convertDateAndTimeToTimestamp(null, null))
 
     }
 
@@ -71,8 +64,8 @@ class CoreUtilsTest {
             0,
             transactionRef = "REK4ZY2YCC",
             category = AppConstants.DEFAULT_CATEGORY,
-            amount = "600.00",
-            transactionCost = "28.00",
+            amount = 600,
+            transactionCost = 28,
             note = "Withdrawal",
             timestamp = CoreUtils.convertDateAndTimeToTimestamp("20/5/23", "4:32 PM"),
             account = "",
@@ -102,8 +95,8 @@ class CoreUtilsTest {
             0,
             transactionRef = "REK5ZV0P9P",
             category = AppConstants.RECEIVED_MONEY,
-            amount = "100.00",
-            transactionCost = "0.00",
+            amount = 100,
+            transactionCost = 0,
             note = "Received cash",
             timestamp = CoreUtils.convertDateAndTimeToTimestamp("20/5/23", "4:03 PM"),
             account = "",
@@ -133,8 +126,8 @@ class CoreUtilsTest {
             0,
             transactionRef = "REK61DLFRE",
             category = AppConstants.DEFAULT_CATEGORY,
-            amount = "100.00",
-            transactionCost = "0.00",
+            amount = 100,
+            transactionCost = 0,
             note = "Buy Goods...",
             timestamp = CoreUtils.convertDateAndTimeToTimestamp("20/5/23", "6:39 PM"),
             account = "",
@@ -155,8 +148,8 @@ class CoreUtilsTest {
         val payBillRecord = Record(
             transactionRef = "REL83EC6RG",
             category = AppConstants.DEFAULT_CATEGORY,
-            amount = "2,500.00",
-            transactionCost = "0.00",
+            amount = 2500,
+            transactionCost = 0,
             note = "Pay Bill...",
             timestamp = CoreUtils.convertDateAndTimeToTimestamp("21/5/23", "2:59 PM"),
             account = "",
@@ -176,12 +169,11 @@ class CoreUtilsTest {
         assertTrue(payBillRecord == createdPayBillRecord)
 
 
-
         val sendMoneyRecord = Record(
             transactionRef = "REL93DKL7Z",
             category = AppConstants.DEFAULT_CATEGORY,
-            amount = "1.00",
-            transactionCost = "0.00",
+            amount = 1,
+            transactionCost = 0,
             note = "Send Money...",
             timestamp = CoreUtils.convertDateAndTimeToTimestamp("21/5/22", "1:51 PM"),
             account = "",
@@ -202,8 +194,8 @@ class CoreUtilsTest {
         val buyAirtimeRecord = Record(
             transactionRef = "REK3YEJE2F",
             category = AppConstants.AIRTIME,
-            amount = "300.00",
-            transactionCost ="0.00",
+            amount = 300,
+            transactionCost = 0,
             note = "Buy Airtime...",
             timestamp = CoreUtils.convertDateAndTimeToTimestamp("20/5/22", "2:26 AM"),
             account = "",
@@ -220,6 +212,18 @@ class CoreUtilsTest {
         )
         assertTrue(buyAirtimeRecord == createdBuyAirtimeRecord)
 
+    }
+
+    @Test
+    fun testConvertStringAmountToInt() {
+        assertTrue(0 == CoreUtils.convertStringAmountToInt("0"))
+        assertTrue(0 == CoreUtils.convertStringAmountToInt("0.0"))
+        assertTrue(100 == CoreUtils.convertStringAmountToInt("100"))
+        assertTrue(0 == CoreUtils.convertStringAmountToInt("Ksh 0.0"))
+        assertTrue(1000 == CoreUtils.convertStringAmountToInt("1,000.00"))
+        assertTrue(1000 == CoreUtils.convertStringAmountToInt("1 000.00"))
+        assertTrue(1000 == CoreUtils.convertStringAmountToInt("1-000.00"))
+        assertTrue(70000 == CoreUtils.convertStringAmountToInt("70,000.00"))
     }
 
 

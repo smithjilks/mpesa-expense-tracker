@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.smithjilks.mpesaexpensetracker.feature.dashboard.Dashboard
 import com.smithjilks.mpesaexpensetracker.core.constants.MpesaExpenseTrackerScreens
+import com.smithjilks.mpesaexpensetracker.feature.dashboard.Dashboard
 import com.smithjilks.mpesaexpensetracker.feature.records.RecordDetailsScreen
 import com.smithjilks.mpesaexpensetracker.feature.records.RecordsScreen
 import com.smithjilks.mpesaexpensetracker.feature.splashscreen.SplashScreen

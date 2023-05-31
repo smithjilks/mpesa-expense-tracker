@@ -2,7 +2,6 @@ package com.smithjilks.mpesaexpensetracker.feature.records
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,34 +10,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilledTonalIconToggleButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.IconToggleButtonColors
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedIconToggleButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeNodeLifecycleCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -58,7 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
 import com.smithjilks.mpesaexpensetracker.core.constants.MpesaExpenseTrackerScreens
-import com.smithjilks.mpesaexpensetracker.core.model.Category
+import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppDatePickerDialog
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppFilterChipsGroup
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppInputTextField
@@ -66,6 +50,7 @@ import com.smithjilks.mpesaexpensetracker.core.widgets.AppSpinner
 import com.smithjilks.mpesaexpensetracker.core.widgets.BottomNavigation
 import com.smithjilks.mpesaexpensetracker.feature.R
 import com.smithjilks.mpesaexpensetracker.feature.dashboard.RecordSummaryRow
+import com.smithjilks.mpesaexpensetracker.feature.records.model.FilterValues
 import com.smithjilks.mpesaexpensetracker.feature.utils.FeatureUtils
 import kotlinx.coroutines.launch
 
@@ -98,12 +83,10 @@ fun MainRecordsContent(
 
     var filterButtonChecked by remember { mutableStateOf(false) }
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-    var filterQuery by rememberSaveable { mutableStateOf("") }
 
 
-    val allRecords = recordsViewModel.allRecordsList.collectAsState().value
-
-    filterButtonChecked = filterQuery.isNotEmpty()
+    val fetchedRecords =
+        recordsViewModel.filteredRecordsList.collectAsState(initial = emptyList()).value
 
 
     Column(
@@ -128,11 +111,10 @@ fun MainRecordsContent(
                 colors = IconButtonDefaults.filledTonalIconToggleButtonColors(),
                 checked = filterButtonChecked,
                 onCheckedChange = {
-                    filterButtonChecked = it
+                    filterButtonChecked = !filterButtonChecked
                     openBottomSheet = it
-
                     if (!it) {
-                        filterQuery = ""
+                        recordsViewModel.updateFilterValues(FilterValues())
                     }
                 }
             ) {
@@ -152,7 +134,7 @@ fun MainRecordsContent(
         }
 
         LazyColumn {
-            items(allRecords) {
+            items(fetchedRecords) {
                 RecordSummaryRow(
                     modifier = Modifier.clickable {
                         navController.navigate(
@@ -168,21 +150,26 @@ fun MainRecordsContent(
 
     FilterBottomSheet(
         open = openBottomSheet,
-        onDismissBottomSheet = { openBottomSheet = !openBottomSheet },
-        onFilterQueryChange = { filterQuery = it }
+        onDismissBottomSheet = {
+            openBottomSheet = !openBottomSheet
+        },
+        onFilterRecords = {
+            recordsViewModel.updateFilterValues(it)
+            filterButtonChecked = true
+        }
     )
 
 
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterBottomSheet(
     modifier: Modifier = Modifier,
     open: Boolean,
     onDismissBottomSheet: (Boolean) -> Unit,
-    onFilterQueryChange: (String) -> Unit = {}
+    onFilterRecords: (FilterValues) -> Unit = {}
 ) {
 
     var startDate by remember { mutableStateOf("") }
@@ -190,17 +177,16 @@ fun FilterBottomSheet(
     var openDatePicker by remember { mutableStateOf(false) }
     var isStartDate by remember { mutableStateOf(false) }
 
+    var selectedFilterChip by remember { mutableStateOf("") }
+    var selectedSortByAmountChip by remember { mutableStateOf("") }
+    var selectedSortByIdChip by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf("General Shopping") }
 
     var skipPartiallyExpanded by remember { mutableStateOf(true) }
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = skipPartiallyExpanded
     )
     val scope = rememberCoroutineScope()
-
-    var selectedFilterChip by remember { mutableStateOf("") }
-    var selectedSortByChip by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf("") }
-
 
 
     if (open) {
@@ -225,7 +211,8 @@ fun FilterBottomSheet(
                 FilledTonalButton(
                     onClick = {
                         selectedFilterChip = ""
-                        selectedSortByChip = ""
+                        selectedSortByAmountChip = ""
+                        selectedSortByIdChip = ""
                         startDate = ""
                         endDate = ""
                     },
@@ -266,9 +253,16 @@ fun FilterBottomSheet(
             // Sort by grid
             AppFilterChipsGroup(
                 modifier = modifier.padding(horizontal = 10.dp),
-                chipLabels = listOf("Highest", "Lowest", "Newest", "Oldest"),
-                selectedChip = selectedSortByChip,
-                onSelectedChange = { selectedSortByChip = it }
+                chipLabels = listOf("Highest", "Lowest"),
+                selectedChip = selectedSortByAmountChip,
+                onSelectedChange = { selectedSortByAmountChip = it }
+            )
+
+            AppFilterChipsGroup(
+                modifier = modifier.padding(horizontal = 10.dp),
+                chipLabels = listOf("Newest", "Oldest"),
+                selectedChip = selectedSortByIdChip,
+                onSelectedChange = { selectedSortByIdChip = it }
             )
 
             Text(
@@ -277,6 +271,7 @@ fun FilterBottomSheet(
                 modifier = modifier.padding(horizontal = 10.dp),
                 fontWeight = FontWeight.Bold
             )
+
             Row(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -358,7 +353,22 @@ fun FilterBottomSheet(
                 // Note: If you provide logic outside of onDismissRequest to remove the sheet,
                 // you must additionally handle intended state cleanup, if any.
                 onClick = {
-                    onFilterQueryChange("Query")
+                    onFilterRecords(
+                        FilterValues(
+                            recordType = selectedFilterChip.ifEmpty { null },
+                            category = selectedCategory,
+
+                            startDate = if (startDate.isEmpty()) null
+                            else CoreUtils.convertDateAndTimeToTimestamp(startDate, "12:00 AM"),
+
+                            endDate =
+                            if (endDate.isEmpty()) null
+                            else CoreUtils.convertDateAndTimeToTimestamp(endDate, "12:00 AM"),
+
+                            byHighestAmount = selectedSortByAmountChip == "Highest",
+                            byNewest = selectedSortByIdChip == "Newest"
+                        )
+                    )
                     scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
                         if (!bottomSheetState.isVisible) {
                             onDismissBottomSheet(open)
@@ -379,7 +389,7 @@ fun FilterBottomSheet(
     AppDatePickerDialog(
         openDatePicker,
         onValueChange = {
-            it?.let {  date ->
+            it?.let { date ->
                 if (isStartDate) startDate = date else endDate = date
             }
             openDatePicker = false

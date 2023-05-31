@@ -7,14 +7,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.repository.AppDatabaseRepository
+import com.smithjilks.mpesaexpensetracker.feature.records.model.FilterValues
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class RecordsViewModel @Inject constructor(
     private val repository: AppDatabaseRepository,
@@ -22,14 +27,34 @@ class RecordsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var dbRecord by mutableStateOf(
-        Record(0, "","","","","",0,"","","", null)
+        Record(0, "", "", 0, 0, "", 0, "", "", "", null)
     )
         private set
 
     private val _allRecordsList = MutableStateFlow<List<Record>>(emptyList())
     val allRecordsList = _allRecordsList.asStateFlow()
+
+
+    private val _filterValues = MutableStateFlow(FilterValues())
+    private val filterValues: StateFlow<FilterValues> = _filterValues
+
+    //val filterValues = MutableStateFlow(FilterValues())
+
+    val filteredRecordsList = filterValues.flatMapLatest { values ->
+        repository.getFilteredRecords(
+            values.recordType,
+            values.category,
+            values.startDate,
+            values.endDate,
+            values.byHighestAmount,
+            values.byNewest
+        )
+    }
+
+
+
     init {
-        viewModelScope.launch(ioDispatcher) {
+        effect {
             repository.getRecentRecords().distinctUntilChanged().collect { listOfRecentRecords ->
                 if (listOfRecentRecords.isNotEmpty()) {
                     _allRecordsList.value = listOfRecentRecords
@@ -40,17 +65,13 @@ class RecordsViewModel @Inject constructor(
         }
     }
 
-    fun getRecordById(id: Int) {
-        viewModelScope.launch(ioDispatcher) {
-            dbRecord = repository.getRecordById(id)
-        }
+    fun getRecordById(id: Int) = effect { dbRecord = repository.getRecordById(id) }
+
+    fun addRecord(record: Record) =  effect { repository.insertRecord(record) }
+
+    fun updateFilterValues(values: FilterValues) = effect { _filterValues.value = values }
+
+    private fun effect(block: suspend () -> Unit) {
+        viewModelScope.launch(ioDispatcher) { block() }    // 4
     }
-
-    fun addRecord(record: Record) {
-        viewModelScope.launch(ioDispatcher) {
-            repository.insertRecord(record)
-        }
-    }
-
-
 }

@@ -6,8 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
-import com.smithjilks.mpesaexpensetracker.core.model.Category
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.model.User
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +40,28 @@ interface AppDao {
     @Query("SELECT * FROM records_table where transactionRef =:transactionRef")
     suspend fun getRecordByTransactionRef(transactionRef: String): Record
 
+    @Query(
+        """ SELECT * FROM records_table
+            WHERE (:recordType IS NULL OR recordType LIKE :recordType)
+            AND (:category IS NULL OR category = :category)
+            AND (:startDate IS NULL OR timestamp >= :startDate)
+            AND (:endDate IS NULL OR timestamp <= :endDate)
+            ORDER BY 
+            CASE WHEN :byHighestAmount = 1 THEN amount END DESC,
+            CASE WHEN :byHighestAmount = 0 THEN amount END ASC,
+            CASE WHEN :byNewest = 1 THEN id END DESC,
+            CASE WHEN :byNewest = 0 THEN id END ASC
+            """
+    )
+    fun getFilteredRecords(
+        recordType: String? = null,
+        category: String? = null,
+        startDate: Long? = null,
+        endDate: Long? = null,
+        byHighestAmount: Boolean = false,
+        byNewest: Boolean = false
+    ): Flow<List<Record>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecord(record: Record)
 
@@ -56,6 +76,8 @@ interface AppDao {
 
     @Delete
     suspend fun deleteRecord(record: Record)
+
+
 }
 
 

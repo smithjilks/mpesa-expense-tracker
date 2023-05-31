@@ -16,21 +16,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,11 +45,9 @@ import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppDatePickerDialog
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppInputTextField
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppSpinner
-import com.smithjilks.mpesaexpensetracker.core.widgets.TimePickerDialog
+import com.smithjilks.mpesaexpensetracker.core.widgets.AppTimePicker
 import com.smithjilks.mpesaexpensetracker.feature.R
 import com.smithjilks.mpesaexpensetracker.feature.utils.FeatureUtils
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -94,9 +85,9 @@ fun RecordDetailsContent(
 
     var transactionRef by remember { mutableStateOf("") }
 
-    var amount by remember { mutableStateOf("0") }
+    var amount by remember { mutableStateOf(0) }
 
-    var transactionCost by remember { mutableStateOf("0") }
+    var transactionCost by remember { mutableStateOf(0) }
 
     var category by remember { mutableStateOf("") }
 
@@ -212,7 +203,7 @@ fun RecordDetailsContent(
                             modifier = modifier
                                 .fillMaxWidth()
                                 .weight(1f),
-                            text = amount,
+                            text = amount.toString(),
                             label = "Amount",
                             prefix = {
                                 Text(
@@ -220,14 +211,14 @@ fun RecordDetailsContent(
                                 )
                             },
                             keyboardType = KeyboardType.NumberPassword,
-                            onTextChange = { amount = it }) {
+                            onTextChange = { amount = CoreUtils.convertStringAmountToInt(it) }) {
                         }
 
                         AppInputTextField(
                             modifier = modifier
                                 .fillMaxWidth()
                                 .weight(1f),
-                            text = transactionCost,
+                            text = transactionCost.toString(),
                             label = "Transaction Cost",
                             prefix = {
                                 Text(
@@ -235,7 +226,9 @@ fun RecordDetailsContent(
                                 )
                             },
                             keyboardType = KeyboardType.NumberPassword,
-                            onTextChange = { transactionCost = it }) {
+                            onTextChange = {
+                                transactionCost = CoreUtils.convertStringAmountToInt(it)
+                            }) {
                         }
                     }
 
@@ -316,21 +309,18 @@ fun RecordDetailsContent(
                                     contentDescription = "Date Icon"
                                 )
                             },
-                            onTextChange = { time = it }) {
-                        }
+                            onTextChange = { time = it }) {}
                     }
 
                     AppInputTextField(
                         text = payee,
                         label = "Payee",
-                        onTextChange = { payee = it }) {
-                    }
+                        onTextChange = { payee = it }) {}
 
                     AppInputTextField(
                         text = account,
                         label = "Account",
-                        onTextChange = { account = it }) {
-                    }
+                        onTextChange = { account = it }) {}
                 }
 
             }
@@ -361,6 +351,7 @@ fun RecordDetailsContent(
 
                         recordsViewModel.addRecord(record = newRecord)
                         navController.popBackStack()
+
                     },
                     modifier = modifier
                         .fillMaxWidth(0.9f)
@@ -388,24 +379,13 @@ fun RecordDetailsContent(
         }
     )
 
-    if (showTimePicker) {
-        val timePickerState = rememberTimePickerState()
-        val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
-        TimePickerDialog(
-            onCancel = { showTimePicker = false },
-            onConfirm = {
-                val cal = Calendar.getInstance()
-                cal.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
-                cal.set(Calendar.MINUTE, timePickerState.minute)
-                cal.isLenient = false
-
-                time = formatter.format(cal.time)
-                showTimePicker = false
-            },
-        ) {
-            TimePicker(state = timePickerState)
+    AppTimePicker(
+        showTimePicker,
+        onValueChange = {
+            it?.let { time = it }
+            showTimePicker = false
         }
-    }
+    )
 
 }
 

@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id(Libs.BuildPlugins.androidApplication)
     kotlin("android")

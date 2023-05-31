@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.smithjilks.mpesaexpensetracker.core.theme.MpesaExpenseTrackerTheme
 import com.smithjilks.mpesaexpensetracker.core.utils.Permissions
-import com.smithjilks.mpesaexpensetracker.core.utils.SmsBroadcastReceiver
 import com.smithjilks.mpesaexpensetracker.navigation.MpesaExpenseTrackerNavigation
 import dagger.hilt.android.AndroidEntryPoint
 

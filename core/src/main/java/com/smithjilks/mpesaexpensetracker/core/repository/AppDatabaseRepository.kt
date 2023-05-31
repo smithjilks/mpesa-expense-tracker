@@ -2,10 +2,8 @@ package com.smithjilks.mpesaexpensetracker.core.repository
 
 import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
 import com.smithjilks.mpesaexpensetracker.core.data.AppDao
-import com.smithjilks.mpesaexpensetracker.core.model.Category
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.model.User
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AppDatabaseRepository @Inject constructor(
@@ -22,6 +20,16 @@ class AppDatabaseRepository @Inject constructor(
     fun getAllIncomeRecords() = appDao.getAllRecordsByRecordType(AppConstants.INCOME)
     fun getAllExpenseRecords() = appDao.getAllRecordsByRecordType(AppConstants.EXPENSE)
     fun getRecentRecords() = appDao.getRecentRecords()
+
+    fun getFilteredRecords(
+        recordType: String? = null,
+        category: String? = null,
+        startDate: Long? = null,
+        endDate: Long? = null,
+        byHighestAmount: Boolean = false,
+        byNewest: Boolean = false
+    ) = appDao.getFilteredRecords(recordType, category, startDate, endDate, byHighestAmount, byNewest)
+
     suspend fun getRecordById(id: Int) = appDao.getRecordById(id)
     suspend fun getRecordByTransactionRef(transactionRef: String) =
         appDao.getRecordByTransactionRef(transactionRef)

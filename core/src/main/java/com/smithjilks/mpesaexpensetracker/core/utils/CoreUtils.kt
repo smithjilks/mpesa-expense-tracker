@@ -15,19 +15,27 @@ object CoreUtils {
 
 
     fun formatAmount(amount: Double): String {
-        return "%.2f".format(amount)
+        return "Ksh %.2f".format(amount)
     }
 
-    fun formatDate(timestamp: Int): String {
+    fun convertStringAmountToInt(value: String): Int {
+        return try {
+            value.replace("([, -])|(\\.00)".toRegex(), "").toInt()
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    fun formatTimestamp(timestamp: Long): String {
         val sdf = SimpleDateFormat("EEE, MMM d yyyy", Locale.getDefault())
-        val date = Date(timestamp.toLong() * 1000)
+        val date = Date(timestamp)
 
         return sdf.format(date)
     }
 
-    fun formatTime(timestamp: Int): String {
+    fun formatTime(timestamp: Long): String {
         val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        val date = Date(timestamp.toLong() * 1000)
+        val date = Date(timestamp)
 
         // DateTimeFormatter is more Thread safe approach however requires > API Level 26
         // SimpleDateFormat is not designed to support multpile threads
@@ -46,19 +54,21 @@ object CoreUtils {
         return sdf.format(date)
     }
 
-    fun daysAgo(timestamp: Int): String {
-        val diff = kotlin.math.abs(Date().time.toInt() - timestamp)
-        val days = (diff / (24 * 60 * 60 * 1000))
+    fun daysAgo(timestamp: Long): String {
+        val diff = kotlin.math.abs(Date().time - timestamp)
+        val days = (diff / (24 * 60 * 60 * 1000)).toInt()
 
         return when (days) {
             0 -> {
                 "Today"
             }
+
             1 -> {
                 "Yesterday"
             }
+
             else -> {
-                formatDate(timestamp)
+                formatTimestamp(timestamp)
             }
         }
     }
@@ -68,12 +78,6 @@ object CoreUtils {
         return phoneNumber.trim().matches(Regex(phoneNumberRegex))
     }
 
-    fun sumAmountAndTransactionCost(amount: String, transactionCost: String): String {
-        return formatAmount(
-            amount.replace(",","").toDouble()
-                    + transactionCost.replace(",","").toDouble()
-        )
-    }
 
     fun createRecordFromMpesaMessage(message: String): Record? {
 
@@ -100,22 +104,18 @@ object CoreUtils {
 
 
 
-        return  when {
+        return when {
             //Handle withdrawal message
             message.contains("Withdraw") -> {
 
                 val payeeLength = withdrawalFromRegex.find(message)?.value?.length ?: 0
                 val payee = withdrawalFromRegex.find(message)?.value
 
-                 Record(
+                Record(
                     transactionRef = transactionRef,
                     category = AppConstants.DEFAULT_CATEGORY,
-                    amount = amounts[0].value.substring(3),
-                    transactionCost = try {
-                        amounts[2].value.substring(3)
-                    } catch (e: Exception) {
-                        "0.00"
-                    },
+                    amount = convertStringAmountToInt(amounts[0].value.substring(3)),
+                    transactionCost = convertStringAmountToInt(amounts[2].value.substring(3)),
                     note = "Withdrawal",
                     timestamp = timestamp,
                     account = "",
@@ -144,8 +144,8 @@ object CoreUtils {
                 Record(
                     transactionRef = transactionRef,
                     category = AppConstants.RECEIVED_MONEY,
-                    amount = amounts[0].value.substring(3),
-                    transactionCost = "0.00",
+                    amount = convertStringAmountToInt(amounts[0].value.substring(3)),
+                    transactionCost = 0,
                     note = "Received cash",
                     timestamp = timestamp,
                     account = "",
@@ -165,12 +165,8 @@ object CoreUtils {
                 Record(
                     transactionRef = transactionRef,
                     category = AppConstants.DEFAULT_CATEGORY,
-                    amount = amounts[0].value.substring(3),
-                    transactionCost = try {
-                        amounts[2].value.substring(3)
-                    } catch (e: Exception) {
-                        "0.00"
-                    },
+                    amount = convertStringAmountToInt(amounts[0].value.substring(3)),
+                    transactionCost = convertStringAmountToInt(amounts[2].value.substring(3)),
                     note = "Buy Goods...",
                     timestamp = timestamp,
                     account = "",
@@ -189,12 +185,8 @@ object CoreUtils {
                 Record(
                     transactionRef = transactionRef,
                     category = AppConstants.DEFAULT_CATEGORY,
-                    amount = amounts[0].value.substring(3),
-                    transactionCost = try {
-                        amounts[2].value.substring(3)
-                    } catch (e: Exception) {
-                        "0.00"
-                    },
+                    amount = convertStringAmountToInt(amounts[0].value.substring(3)),
+                    transactionCost = convertStringAmountToInt(amounts[2].value.substring(3)),
                     note = "Pay Bill...",
                     timestamp = timestamp,
                     account = "",
@@ -213,12 +205,10 @@ object CoreUtils {
                 Record(
                     transactionRef = transactionRef,
                     category = AppConstants.DEFAULT_CATEGORY,
-                    amount = amounts[0].value.substring(3),
-                    transactionCost = try {
+                    amount = convertStringAmountToInt(amounts[0].value.substring(3)),
+                    transactionCost = convertStringAmountToInt(
                         amounts[2].value.substring(3)
-                    } catch (e: Exception) {
-                        "0.00"
-                    },
+                    ),
                     note = "Send Money...",
                     timestamp = timestamp,
                     account = "",
@@ -234,12 +224,8 @@ object CoreUtils {
                 Record(
                     transactionRef = transactionRef,
                     category = AppConstants.AIRTIME,
-                    amount = amounts[0].value.substring(3),
-                    transactionCost = try {
-                        amounts[2].value.substring(3)
-                    } catch (e: Exception) {
-                        "0.00"
-                    },
+                    amount = convertStringAmountToInt(amounts[0].value.substring(3)),
+                    transactionCost = convertStringAmountToInt(amounts[2].value.substring(3)),
                     note = "Buy Airtime...",
                     timestamp = timestamp,
                     account = "",
@@ -249,18 +235,20 @@ object CoreUtils {
                 )
             }
 
-            else -> {null}
+            else -> {
+                null
+            }
         }
     }
 
-    fun convertDateAndTimeToTimestamp(date: String?, time: String?): Int {
+    fun convertDateAndTimeToTimestamp(date: String?, time: String?): Long {
         // date is in the format 20/5/23
         // time is in the format 4:03 PM
 
         if (date != null && time != null) {
             val format = SimpleDateFormat("dd/M/yy hh:mm a", Locale.UK)
             val newDate = format.parse("$date $time")
-            return newDate.time.div(1000L).toInt()
+            return newDate.time
         }
         return 0
     }
