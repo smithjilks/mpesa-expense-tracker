@@ -43,7 +43,21 @@ fun MpesaExpenseTrackerTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = MaterialTheme.typography.copy(
+            bodyLarge = MaterialTheme.typography.bodyLarge.copy(
+                fontFamily = Montserrat,
+            ),
+            bodySmall = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = Montserrat,
+            ),
+            bodyMedium = MaterialTheme.typography.bodyMedium.copy(
+                fontFamily = Montserrat,
+            ),
+
+            headlineMedium = MaterialTheme.typography.headlineMedium.copy(
+                fontFamily = Montserrat,
+            ),
+        ),
         content = content
     )
 }

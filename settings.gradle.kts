@@ -10,9 +10,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven ("https://jitpack.io")
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 rootProject.name = "Mpesa Expense Tracker"
-include ':app'
-include ':core'
-include ':feature'
+
+include(":app", ":feature", ":core")
+

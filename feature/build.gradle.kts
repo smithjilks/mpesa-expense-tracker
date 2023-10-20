@@ -75,13 +75,12 @@ dependencies {
     kapt(Libs.hiltAndroidCompiler)
     implementation(Libs.AndroidX.Compose.hiltNavigation)
 
+    implementation(Libs.philJayCharts)
+
     implementation(Libs.Accompanist.systemUiController)
     implementation(Libs.Accompanist.permissions)
 
-
-
     implementation(project(":core"))
-
 
     testImplementation(Libs.TestLibraries.junit4)
     androidTestImplementation(Libs.TestLibraries.junitExt)

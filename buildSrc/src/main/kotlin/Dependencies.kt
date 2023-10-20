@@ -30,6 +30,9 @@ object Libs {
     const val hiltCompiler ="com.google.dagger:hilt-compiler:2.44"
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:2.44"
 
+    // Graphs & Charts - https://github.com/PhilJay/MPAndroidChart
+    const val philJayCharts= "com.github.PhilJay:MPAndroidChart:v3.1.0"
+
     object PlayServices {
         const val authApiPhone = "com.google.android.gms:play-services-auth-api-phone:18.0.1"
     }

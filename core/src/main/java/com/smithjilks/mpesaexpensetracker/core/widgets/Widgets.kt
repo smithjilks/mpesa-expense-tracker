@@ -2,6 +2,7 @@ package com.smithjilks.mpesaexpensetracker.core.widgets
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,6 +19,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
@@ -56,6 +60,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.smithjilks.mpesaexpensetracker.core.model.AppButton
 import com.smithjilks.mpesaexpensetracker.core.model.Category
 import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
 import java.text.SimpleDateFormat
@@ -73,9 +78,9 @@ fun AppInputTextField(
     maxLines: Int = 1,
     minLines: Int = 1,
     keyboardType: KeyboardType = KeyboardType.Text,
-    prefix: @Composable() (() -> Unit)? = null,
-    leadingIcon: @Composable() (() -> Unit)? = null,
-    trailingIcon: @Composable() (() -> Unit)? = null,
+    prefix: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     onTextChange: (String) -> Unit,
     onImeAction: () -> Unit
 ) {
@@ -300,7 +305,7 @@ fun AppFilterChipsGroup(
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppDatePickerDialog(showDatePickerDialog: Boolean, onValueChange: (String?) -> Unit){
+fun AppDatePickerDialog(showDatePickerDialog: Boolean, onValueChange: (String?) -> Unit) {
     if (showDatePickerDialog) {
         val datePickerState = rememberDatePickerState()
         val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
@@ -358,3 +363,89 @@ fun AppTimePicker(showTimePicker: Boolean, onValueChange: (String?) -> Unit) {
         }
     }
 }
+
+@Composable
+fun AppButtonToggleGroup(
+    modifier: Modifier = Modifier,
+    buttons: List<AppButton>
+) {
+    var selectedOption by remember {
+        mutableStateOf(buttons.firstOrNull()?.title ?: "")
+    }
+    val onSelectionChange = { text: String ->
+        selectedOption = text
+    }
+
+    val selectedButtonIconTint = Color.White
+    val unSelectedButtonIconTint = MaterialTheme.colorScheme.primary
+
+    val selectedButtonBackground = MaterialTheme.colorScheme.primary
+    val unSelectedButtonBackground = Color.White
+
+    Card(
+        modifier.padding(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+        shape = RoundedCornerShape(4.dp),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 10.dp
+        )
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            buttons.forEach { button ->
+                Row(
+                    modifier = modifier
+                        .clickable {
+                            onSelectionChange(button.title)
+                            button.callback.invoke()
+                        }
+                        .background(
+                            color = if (button.title == selectedOption) {
+                                selectedButtonBackground
+                            } else {
+                                unSelectedButtonBackground
+                            }
+                        ),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    button.iconResource?.let {
+                        Icon(
+                            modifier = modifier
+                                .padding(4.dp)
+                                .size(16.dp),
+                            imageVector = ImageVector.vectorResource(it),
+                            tint = if (button.title == selectedOption) {
+                                selectedButtonIconTint
+                            } else {
+                                unSelectedButtonIconTint
+                            },
+                            contentDescription = "${button.title} icon"
+                        )
+                    }
+
+                    if (!button.isIconButton) {
+                        Text(
+                            text = button.title,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (button.title == selectedOption) {
+                                Color.White
+                            } else {
+                                selectedButtonBackground
+                            },
+                            modifier = Modifier
+                                .padding(4.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+

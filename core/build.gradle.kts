@@ -63,6 +63,8 @@ dependencies {
     kapt(Libs.hiltCompiler)
     kapt(Libs.hiltAndroidCompiler)
 
+    implementation(Libs.philJayCharts)
+
 
     testImplementation(Libs.TestLibraries.junit4)
     androidTestImplementation(Libs.TestLibraries.junitExt)
