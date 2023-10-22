@@ -70,7 +70,7 @@ fun Dashboard(
             FloatingActionButton(
                 onClick = {
                     navController.navigate(MpesaExpenseTrackerScreens.RecordDetailsScreen.name)
-                          },
+                },
             ) {
                 Icon(Icons.Filled.Edit, "Create new record button")
             }
@@ -275,7 +275,7 @@ fun ColumnAmountAndDate(record: Record, modifier: Modifier = Modifier) {
         Text(
             text = "${if (record.recordType == AppConstants.INCOME) "+" else "-"}Ksh. ${
                 record.amount + record.transactionCost
-                
+
             }",
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.End,

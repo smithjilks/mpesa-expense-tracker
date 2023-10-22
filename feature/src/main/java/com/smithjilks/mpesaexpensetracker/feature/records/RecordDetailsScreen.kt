@@ -1,7 +1,6 @@
 package com.smithjilks.mpesaexpensetracker.feature.records
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -63,9 +61,6 @@ fun RecordDetailsScreen(
 
         }
     ) {
-        Log.d("foofo", navController.currentBackStackEntry.toString())
-        Log.d("foofo", navController.currentDestination.toString())
-
         RecordDetailsContent(
             navController = navController,
             recordsViewModel = recordsViewModel,
@@ -76,7 +71,6 @@ fun RecordDetailsScreen(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun RecordDetailsContent(
@@ -123,7 +117,7 @@ fun RecordDetailsContent(
             recordType = recordsViewModel.dbRecord.recordType
             account = recordsViewModel.dbRecord.account
             payee = recordsViewModel.dbRecord.payee
-            date = CoreUtils.formatDate(recordsViewModel.dbRecord.timestamp.toLong() * 1000)
+            date = CoreUtils.formatDate(recordsViewModel.dbRecord.timestamp * 1000)
             time = CoreUtils.formatTime(recordsViewModel.dbRecord.timestamp)
         }
     }
@@ -338,7 +332,7 @@ fun RecordDetailsContent(
                 Button(
                     onClick = {
                         val newRecord = Record(
-                            recordId.toInt(),
+                            id = if (recordId.isNullOrEmpty()) 0 else recordId.toInt(),
                             transactionRef = transactionRef,
                             category = category,
                             amount = amount,
