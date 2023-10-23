@@ -285,7 +285,7 @@ fun ColumnAmountAndDate(record: Record, modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = CoreUtils.formatTimestamp(record.timestamp),
+            text = if (record.timestamp == null) "" else CoreUtils.formatTimestamp(record.timestamp!!),
             style = MaterialTheme.typography.labelSmall,
             textAlign = TextAlign.End,
             color = Color.LightGray,

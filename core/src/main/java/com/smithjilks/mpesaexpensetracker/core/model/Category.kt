@@ -10,5 +10,5 @@ data class Category(
     @NonNull
     val id: Int = 0,
     val name: String,
-    val imageId: Int
+    val imageId: Int?
 )

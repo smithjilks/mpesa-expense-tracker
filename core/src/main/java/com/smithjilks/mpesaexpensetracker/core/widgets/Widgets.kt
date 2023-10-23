@@ -121,7 +121,7 @@ fun AppInputTextField(
         }),
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 8.dp),
         shape = RoundedCornerShape(8.dp)
     )
 
@@ -218,12 +218,14 @@ fun AppSpinner(
             label = label,
             isReadOnly = true,
             isEnabled = false,
-            leadingIcon = {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = selectedOption.imageId),
-                    contentDescription = "${selectedOption.name} Icon",
-                )
-            },
+            leadingIcon = if (selectedOption.imageId != null) {
+                {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = selectedOption.imageId!!),
+                        contentDescription = "${selectedOption.name} Icon",
+                    )
+                }
+            } else null,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             onTextChange = {},
             onImeAction = {}
@@ -242,19 +244,25 @@ fun AppSpinner(
                         .padding(horizontal = 8.dp)
                         .align(Alignment.CenterHorizontally)
                         .exposedDropdownSize(true),
-                    text = { Text(text = option.name) },
+                    text = {
+                        Text(
+                            text = option.name,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
                     onClick = {
                         selectedOption = option
                         expanded = false
                         onValueChange(option.name)
                     },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = option.imageId),
-                            contentDescription = "${option.name} Icon",
-                            modifier = modifier.padding(8.dp)
-                        )
-                    },
+                    leadingIcon = if (option.imageId != null) {
+                        {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = option.imageId!!),
+                                contentDescription = "${selectedOption.name} Icon",
+                            )
+                        }
+                    } else null,
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
                 Divider(modifier = modifier.padding(horizontal = 8.dp))
@@ -419,7 +427,7 @@ fun AppButtonToggleGroup(
                         Icon(
                             modifier = modifier
                                 .padding(4.dp)
-                                .size(16.dp),
+                                .size(24.dp),
                             imageVector = ImageVector.vectorResource(it),
                             tint = if (button.title == selectedOption) {
                                 selectedButtonIconTint
@@ -437,10 +445,10 @@ fun AppButtonToggleGroup(
                             color = if (button.title == selectedOption) {
                                 Color.White
                             } else {
-                                selectedButtonBackground
+                                Color.Black
                             },
                             modifier = Modifier
-                                .padding(4.dp)
+                                .padding(8.dp)
                         )
                     }
                 }

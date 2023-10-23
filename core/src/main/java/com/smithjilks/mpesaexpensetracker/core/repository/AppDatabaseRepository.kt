@@ -28,11 +28,24 @@ class AppDatabaseRepository @Inject constructor(
         endDate: Long? = null,
         byHighestAmount: Boolean = false,
         byNewest: Boolean = false
-    ) = appDao.getFilteredRecords(recordType, category, startDate, endDate, byHighestAmount, byNewest)
+    ) = appDao.getFilteredRecords(
+        recordType,
+        category,
+        startDate,
+        endDate,
+        byHighestAmount,
+        byNewest
+    )
+
+    fun getSummarizedCategorise(
+        recordType: String = AppConstants.EXPENSE,
+        sortDescending: Boolean = true
+    ) = appDao.groupRecordsByExpenseAndCategory(recordType, sortDescending)
 
     suspend fun getRecordById(id: Int) = appDao.getRecordById(id)
     suspend fun getRecordByTransactionRef(transactionRef: String) =
         appDao.getRecordByTransactionRef(transactionRef)
+
     suspend fun insertRecord(record: Record) = appDao.insertRecord(record)
 
     suspend fun insertRecords(records: List<Record>) = appDao.insertRecords(records)

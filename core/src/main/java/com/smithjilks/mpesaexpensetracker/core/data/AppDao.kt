@@ -6,6 +6,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
+import com.smithjilks.mpesaexpensetracker.core.model.CategorySummary
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.model.User
 import kotlinx.coroutines.flow.Flow
@@ -61,6 +63,28 @@ interface AppDao {
         byHighestAmount: Boolean = false,
         byNewest: Boolean = false
     ): Flow<List<Record>>
+
+
+    @Query(
+        """ SELECT 
+            category, 
+            recordType as categoryType,
+            recordImageResourceId as categoryImageResourceId,
+            SUM(amount + transactionCost) as total 
+            FROM records_table
+            WHERE (:recordType IS NULL OR recordType LIKE :recordType)
+            GROUP BY category
+            ORDER BY 
+            CASE WHEN :sortDescending = 1 THEN amount END DESC,
+            CASE WHEN :sortDescending = 0 THEN amount END ASC
+            """
+    )
+    fun groupRecordsByExpenseAndCategory(
+        recordType: String = AppConstants.EXPENSE,
+        sortDescending: Boolean = true,
+    ): Flow<List<CategorySummary>>
+
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecord(record: Record): Long

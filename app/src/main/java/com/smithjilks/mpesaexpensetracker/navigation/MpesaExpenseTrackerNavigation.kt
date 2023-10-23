@@ -13,6 +13,7 @@ import com.smithjilks.mpesaexpensetracker.feature.dashboard.Dashboard
 import com.smithjilks.mpesaexpensetracker.feature.records.RecordDetailsScreen
 import com.smithjilks.mpesaexpensetracker.feature.records.RecordsScreen
 import com.smithjilks.mpesaexpensetracker.feature.splashscreen.SplashScreen
+import com.smithjilks.mpesaexpensetracker.feature.statistics.StatisticsScreen
 
 @Composable
 fun MpesaExpenseTrackerNavigation() {
@@ -33,7 +34,7 @@ fun MpesaExpenseTrackerNavigation() {
         }
 
         composable(MpesaExpenseTrackerScreens.StatisticsScreen.name) {
-
+            StatisticsScreen(navController = navController)
         }
 
         composable(MpesaExpenseTrackerScreens.RecordsScreen.name) {

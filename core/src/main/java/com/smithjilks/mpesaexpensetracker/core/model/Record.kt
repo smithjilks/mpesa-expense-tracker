@@ -18,7 +18,7 @@ data class Record(
     val amount: Int,
     val transactionCost: Int,
     val note: String,
-    val timestamp: Long,
+    val timestamp: Long?,
     val account: String,
     val payee: String,
     val recordType: String,
