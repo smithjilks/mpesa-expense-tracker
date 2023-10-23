@@ -97,9 +97,9 @@ fun RecordDetailsContent(
 
     var payee by remember { mutableStateOf("") }
 
-    var date by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf(recordsViewModel.timeNow) }
 
-    var time by remember { mutableStateOf("") }
+    var time by remember { mutableStateOf(recordsViewModel.dateToday) }
 
     val systemUiController = rememberSystemUiController()
     var showDatePickerDialog by remember { mutableStateOf(false) }
@@ -117,8 +117,8 @@ fun RecordDetailsContent(
             recordType = recordsViewModel.dbRecord.recordType
             account = recordsViewModel.dbRecord.account
             payee = recordsViewModel.dbRecord.payee
-            date = CoreUtils.formatDate(recordsViewModel.dbRecord.timestamp * 1000)
-            time = CoreUtils.formatTime(recordsViewModel.dbRecord.timestamp)
+            date = CoreUtils.formatDate(recordsViewModel.dbRecord.timestamp!! * 1000)
+            time = CoreUtils.formatTime(recordsViewModel.dbRecord.timestamp!!)
         }
     }
 

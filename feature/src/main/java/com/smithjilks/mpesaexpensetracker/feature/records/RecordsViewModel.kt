@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.repository.AppDatabaseRepository
+import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
 import com.smithjilks.mpesaexpensetracker.feature.records.model.FilterValues
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -38,7 +40,6 @@ class RecordsViewModel @Inject constructor(
     private val _filterValues = MutableStateFlow(FilterValues())
     private val filterValues: StateFlow<FilterValues> = _filterValues
 
-    //val filterValues = MutableStateFlow(FilterValues())
 
     val filteredRecordsList = filterValues.flatMapLatest { values ->
         repository.getFilteredRecords(
@@ -51,11 +52,15 @@ class RecordsViewModel @Inject constructor(
         )
     }
 
+    private val instant = Calendar.getInstance()
+    val timeNow = CoreUtils.formatDate(instant.timeInMillis)
+    val dateToday = CoreUtils.formatTime(instant.timeInMillis)
+
 
 
     init {
         effect {
-            repository.getRecentRecords().distinctUntilChanged().collect { listOfRecentRecords ->
+            repository.getAllRecords().distinctUntilChanged().collect { listOfRecentRecords ->
                 if (listOfRecentRecords.isNotEmpty()) {
                     _allRecordsList.value = listOfRecentRecords
                 } else {
