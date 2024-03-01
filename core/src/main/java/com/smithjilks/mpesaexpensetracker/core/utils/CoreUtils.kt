@@ -122,7 +122,7 @@ object CoreUtils {
                     payee = payee?.subSequence(5, payeeLength - 10)
                         .toString(),
                     recordType = AppConstants.EXPENSE,
-                    recordImageResourceId = null
+                    storedId = null
                 )
             }
 
@@ -152,7 +152,7 @@ object CoreUtils {
                     payee = payee?.subSequence(5, payeeLength - 7)
                         .toString(),
                     recordType = AppConstants.INCOME,
-                    recordImageResourceId = null
+                    storedId = null
                 )
 
             }
@@ -173,7 +173,7 @@ object CoreUtils {
                     payee = payee?.subSequence(8, payeeLength - 3)
                         .toString(),
                     recordType = AppConstants.EXPENSE,
-                    recordImageResourceId = null
+                    storedId = null
                 )
             }
 
@@ -193,7 +193,7 @@ object CoreUtils {
                     payee = payee?.subSequence(8, payeeLength - 7)
                         .toString(),
                     recordType = AppConstants.EXPENSE,
-                    recordImageResourceId = null
+                    storedId = null
                 )
             }
 
@@ -215,7 +215,7 @@ object CoreUtils {
                     payee = payee?.subSequence(8, payeeLength - 7)
                         .toString(),
                     recordType = AppConstants.EXPENSE,
-                    recordImageResourceId = null
+                    storedId = null
                 )
             }
 
@@ -231,7 +231,7 @@ object CoreUtils {
                     account = "",
                     payee = "Myself",
                     recordType = AppConstants.EXPENSE,
-                    recordImageResourceId = null
+                    storedId = null
                 )
             }
 

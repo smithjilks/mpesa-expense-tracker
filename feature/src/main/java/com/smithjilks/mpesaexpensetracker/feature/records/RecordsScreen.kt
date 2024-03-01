@@ -334,7 +334,7 @@ fun FilterBottomSheet(
             AppSpinner(
                 modifier = modifier.padding(bottom = 8.dp),
                 label = "",
-                parentOptions = FeatureUtils.getCategoriesList(),
+                parentOptions = FeatureUtils.categoriesList,
                 onValueChange = { selectedCategory = it }
             )
 

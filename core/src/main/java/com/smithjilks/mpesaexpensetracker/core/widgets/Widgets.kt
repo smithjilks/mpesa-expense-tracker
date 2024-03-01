@@ -63,6 +63,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.smithjilks.mpesaexpensetracker.core.model.AppButton
 import com.smithjilks.mpesaexpensetracker.core.model.Category
 import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
+import com.smithjilks.mpesaexpensetracker.core.utils.getAsRes
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -218,14 +219,21 @@ fun AppSpinner(
             label = label,
             isReadOnly = true,
             isEnabled = false,
-            leadingIcon = if (selectedOption.imageId != null) {
-                {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = selectedOption.imageId!!),
-                        contentDescription = "${selectedOption.name} Icon",
-                    )
+            leadingIcon = selectedOption.let { option ->
+                val imageVector = when {
+                    option.stored != null -> ImageVector.vectorResource(parentOptions.getAsRes(option.stored)!!)
+                    option.resId != null -> ImageVector.vectorResource(option.resId)
+                    else -> null
                 }
-            } else null,
+                {
+                    imageVector?.let {
+                        Icon(
+                            imageVector = it,
+                            contentDescription = "${option.name} Icon"
+                        )
+                    }
+                }
+            },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             onTextChange = {},
             onImeAction = {}
@@ -255,10 +263,10 @@ fun AppSpinner(
                         expanded = false
                         onValueChange(option.name)
                     },
-                    leadingIcon = if (option.imageId != null) {
+                    leadingIcon = if (option.resId != null) {
                         {
                             Icon(
-                                imageVector = ImageVector.vectorResource(id = option.imageId!!),
+                                imageVector = ImageVector.vectorResource(id = option.resId!!),
                                 contentDescription = "${selectedOption.name} Icon",
                             )
                         }

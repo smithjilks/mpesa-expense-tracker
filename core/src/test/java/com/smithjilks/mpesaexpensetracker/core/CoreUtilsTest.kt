@@ -71,7 +71,7 @@ class CoreUtilsTest {
             account = "",
             payee = "353403 - New Nairobi-Naivasha First communication Nairobi-Mai Mahiu stage ",
             recordType = AppConstants.EXPENSE,
-            recordImageResourceId = null
+            storedId = null
         )
 
         val createdWithdrawalRecord = CoreUtils.createRecordFromMpesaMessage(
@@ -102,7 +102,7 @@ class CoreUtilsTest {
             account = "",
             payee = "STANDARD CHARTERED BANK 329299",
             recordType = AppConstants.INCOME,
-            recordImageResourceId = null
+            storedId = null
         )
 
         val createdReceivedRecord = CoreUtils.createRecordFromMpesaMessage(
@@ -133,7 +133,7 @@ class CoreUtilsTest {
             account = "",
             payee = "Naivas Safari Centre Naivasha.",
             recordType = AppConstants.EXPENSE,
-            recordImageResourceId = null
+            storedId = null
         )
 
         val createdBuyGoodsRecord = CoreUtils.createRecordFromMpesaMessage(
@@ -155,7 +155,7 @@ class CoreUtilsTest {
             account = "",
             payee = "KPLC PREPAID for account 37228894004",
             recordType = AppConstants.EXPENSE,
-            recordImageResourceId = null
+            storedId = null
         )
 
         val createdPayBillRecord = CoreUtils.createRecordFromMpesaMessage(
@@ -179,7 +179,7 @@ class CoreUtilsTest {
             account = "",
             payee = "JOHN  DOE 0712345678",
             recordType = AppConstants.EXPENSE,
-            recordImageResourceId = null
+            storedId = null
         )
 
         val createdSendMoneyRecord = CoreUtils.createRecordFromMpesaMessage(
@@ -201,7 +201,7 @@ class CoreUtilsTest {
             account = "",
             payee = "Myself",
             recordType = AppConstants.EXPENSE,
-            recordImageResourceId = null
+            storedId = null
         )
 
         val createdBuyAirtimeRecord = CoreUtils.createRecordFromMpesaMessage(

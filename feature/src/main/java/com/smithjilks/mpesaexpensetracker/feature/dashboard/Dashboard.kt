@@ -51,8 +51,10 @@ import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
 import com.smithjilks.mpesaexpensetracker.core.constants.MpesaExpenseTrackerScreens
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
+import com.smithjilks.mpesaexpensetracker.core.utils.getAsRes
 import com.smithjilks.mpesaexpensetracker.core.widgets.BottomNavigation
 import com.smithjilks.mpesaexpensetracker.feature.R
+import com.smithjilks.mpesaexpensetracker.feature.utils.FeatureUtils
 import java.util.Date
 
 
@@ -307,10 +309,9 @@ fun ColumnNoteAndCategory(record: Record, modifier: Modifier = Modifier) {
             shape = CircleShape,
             color = Color.Transparent
         ) {
-
             Icon(
                 imageVector = ImageVector.vectorResource(
-                    record.recordImageResourceId ?: R.drawable.shopping_icon
+                    record.storedId?.let { FeatureUtils.categoriesList.getAsRes(it) } ?: R.drawable.shopping_icon
                 ),
                 contentDescription = "${record.category} Icon",
                 modifier = Modifier

@@ -177,7 +177,7 @@ fun CategorySummaryRow(categorySummary: CategorySummary, modifier: Modifier = Mo
         account = "",
         payee = "",
         recordType = categorySummary.categoryType,
-        recordImageResourceId = categorySummary.categoryImageResourceId
+        storedId = categorySummary.categoryImageResourceId
     )
 
     Divider(modifier = modifier.padding(3.dp))

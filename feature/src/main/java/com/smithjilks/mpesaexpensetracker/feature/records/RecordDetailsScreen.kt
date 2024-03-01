@@ -1,6 +1,7 @@
 package com.smithjilks.mpesaexpensetracker.feature.records
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smithjilks.mpesaexpensetracker.core.constants.AppConstants
-import com.smithjilks.mpesaexpensetracker.core.model.Category
 import com.smithjilks.mpesaexpensetracker.core.model.Record
 import com.smithjilks.mpesaexpensetracker.core.utils.CoreUtils
 import com.smithjilks.mpesaexpensetracker.core.widgets.AppDatePickerDialog
@@ -87,7 +87,7 @@ fun RecordDetailsContent(
 
     var transactionCost by remember { mutableStateOf(0) }
 
-    var category by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf(FeatureUtils.categoriesList.first().name) }
 
     var note by remember { mutableStateOf("") }
 
@@ -233,7 +233,7 @@ fun RecordDetailsContent(
                     //Categories spinner
                     AppSpinner(
                         label = "Category",
-                        parentOptions = FeatureUtils.getCategoriesList(),
+                        parentOptions = FeatureUtils.categoriesList.also { Log.d("FooFoo All categories", it.toString()) },
                         onValueChange = { category = it }
                     )
 
@@ -249,16 +249,7 @@ fun RecordDetailsContent(
                     //Record Type spinner
                     AppSpinner(
                         label = "Record Type",
-                        parentOptions = listOf(
-                            Category(
-                                name = AppConstants.INCOME,
-                                imageId = R.drawable.income_arrow_icon
-                            ),
-                            Category(
-                                name = AppConstants.EXPENSE,
-                                imageId = R.drawable.expense_arrow_icon
-                            ),
-                        ),
+                        parentOptions = FeatureUtils.recordTypesList.also { Log.d("foofoo List: ", it.toString()) },
                         value = recordType,
                         onValueChange = { recordType = it }
                     )
@@ -342,9 +333,9 @@ fun RecordDetailsContent(
                             account = account,
                             payee = payee,
                             recordType = recordType,
-                            recordImageResourceId = FeatureUtils.getCategoriesList().first {
+                            storedId = FeatureUtils.categoriesList.firstOrNull {
                                 it.name == category
-                            }.imageId
+                            }?.stored
                         )
 
                         recordsViewModel.addRecord(record = newRecord)

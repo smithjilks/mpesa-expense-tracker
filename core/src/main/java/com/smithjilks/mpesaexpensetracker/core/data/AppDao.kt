@@ -69,7 +69,7 @@ interface AppDao {
         """ SELECT 
             category, 
             recordType as categoryType,
-            recordImageResourceId as categoryImageResourceId,
+            storedId as categoryImageResourceId,
             SUM(amount + transactionCost) as total 
             FROM records_table
             WHERE (:recordType IS NULL OR recordType LIKE :recordType)
